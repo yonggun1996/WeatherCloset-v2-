@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">SideProject</string>
+    <string name="title_home">기온별 옷차림</string>
+    <string name="title_dashboard">커뮤니티</string>
+    <string name="title_notifications">마이페이지</string>
+    <string name="facebook_app_id">221554526140426</string>
+    <string name="fb_login_protocol_scheme">fb221554526140426</string>
+</resources>
