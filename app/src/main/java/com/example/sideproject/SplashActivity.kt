@@ -12,7 +12,7 @@ class SplashActivity  : AppCompatActivity(){
         super.onCreate(savedInstanceState)
 
         Handler().postDelayed({
-            startActivity(Intent(this, GoogleLoginActivity::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         },time)
 
