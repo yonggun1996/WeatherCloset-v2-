@@ -1,10 +1,8 @@
 package com.example.sideproject
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -14,17 +12,12 @@ import com.facebook.*
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_login.*
-import java.lang.Exception
-import java.security.MessageDigest
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener{
 
@@ -38,6 +31,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener{
     private val RC_SIGN_IN = 9001
     private lateinit var  auth: FirebaseAuth
     private lateinit var callbackManager: CallbackManager
+    private lateinit var  sex : String
 
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,6 +64,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener{
                 // ...
             }
         })
+
 
 
     }

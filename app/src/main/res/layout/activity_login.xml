@@ -35,4 +35,13 @@
         android:paddingBottom="15dp" />
 
 
+
+    <ImageView
+        android:id="@+id/loginK"
+        android:layout_width="240dp"
+        android:layout_height="60dp"
+        android:src="@drawable/kakao_login_medium_narrow"
+        android:layout_margin="10dp"/>
+
+
 </LinearLayout>
