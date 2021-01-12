@@ -46,6 +46,13 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener{
             signIn()
         }
 
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+
         callbackManager = CallbackManager.Factory.create()
         loginF.setReadPermissions("email","public_profile")
         loginF.registerCallback(callbackManager,object : FacebookCallback<LoginResult>{
