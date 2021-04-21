@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/store"
+        android:enabled="true"
+        android:title="스토어"
+        android:icon="@drawable/ic_baseline_storefront_24"/>
+
+    <item
+        android:id="@+id/now_search"
+        android:enabled="true"
+        android:title="현재시간으로 확인"
+        android:icon="@drawable/ic_baseline_access_time_24"/>
+
+    <item
+        android:id="@+id/setting_search"
+        android:enabled="true"
+        android:title="시간 설정후 확인"
+        android:icon="@drawable/ic_baseline_more_time_24"/>
+
+</menu>
