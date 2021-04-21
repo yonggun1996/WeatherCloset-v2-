@@ -1,43 +1,7 @@
 <resources>
-    <string name="app_name">SideProject</string>
-    <string name="title_home">커뮤니티</string>
-    <string name="title_dashboard">기온별 옷차림</string>
-    <string name="title_notifications">마이페이지</string>
-    <string name="facebook_app_id">221554526140426</string>
-    <string name="fb_login_protocol_scheme">fb221554526140426</string>
-    <string name="sex_text">male</string>
-    <string-array name="date">
-        <item>선택</item>
-        <item>오늘</item>
-        <item>내일</item>
-    </string-array>
-
-    <string-array name="time">
-        <item>선택</item>
-        <item>0시</item>
-        <item>1시</item>
-        <item>2시</item>
-        <item>3시</item>
-        <item>4시</item>
-        <item>5시</item>
-        <item>6시</item>
-        <item>7시</item>
-        <item>8시</item>
-        <item>9시</item>
-        <item>10시</item>
-        <item>11시</item>
-        <item>12시</item>
-        <item>13시</item>
-        <item>14시</item>
-        <item>15시</item>
-        <item>16시</item>
-        <item>17시</item>
-        <item>18시</item>
-        <item>19시</item>
-        <item>20시</item>
-        <item>21시</item>
-        <item>22시</item>
-        <item>23시</item>
-        <item>24시</item>
-    </string-array>
+    <string name="app_name">example2</string>
+    <string name="title_activity_maps">Map</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_bottom_nav">MainActivity</string>
 </resources>
