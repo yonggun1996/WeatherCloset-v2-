@@ -117,43 +117,6 @@ class BottomnavFragment2 : Fragment() {
 
     }
 
-    /*private fun jsonparse(){
-        Log.d("BottomnavFragment2", "json 호출")
-        val url = "https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=24,daily=2&appid=7cfe1a321806b8117aab0b650a81555c&units=metric"
-        requestQueue = Volley.newRequestQueue(context);
-
-        val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null,
-
-            Response.Listener { response ->
-                val jsonObject = response.getJSONObject("current")//current object를 불러온다
-                val temp = jsonObject["temp"].toString()//현재 기온
-                val feels_like = jsonObject["feels_like"].toString()//체감기온
-
-                var current_weather_Array = jsonObject.getJSONArray("weather")//current object에 있는 weather 배열을 가져온다
-                var current_weather_Object = current_weather_Array.getJSONObject(0)//weather배열의 id를 가져오는 코드
-                var icon_code = current_weather_Object.getString("icon")//현재 날씨에 대한 이미지 아이콘 코드
-
-                set_image(icon_code)//이미지 설정
-                now_temp_tv.setText("현재온도 : ${Math.round(temp.toDouble())}")//현재 온도 설정
-                feels_like_tv.setText("체감온도 : ${Math.round(feels_like.toDouble())}")//체감 온도 설정
-
-                val now_weather_str = set_nowWeather(icon_code)
-                now_weather.setText(now_weather_str)
-
-                flag_temp = Math.round(temp.toDouble()).toInt()
-
-                set_outer()
-                set_shirt()
-                set_pants()
-                set_other()
-            },
-            Response.ErrorListener {
-                Toast.makeText(context,"데이터를 호출하는데 실패했습니다.",Toast.LENGTH_SHORT).show()
-            }
-
-        )
-    }*/
-
     private fun set_image(icon_code : String){//current_weather_icon의 이미지를 설정하는 메소드
         val url = "http://openweathermap.org/img/wn/${icon_code}@2x.png"
         Glide.with(this)
