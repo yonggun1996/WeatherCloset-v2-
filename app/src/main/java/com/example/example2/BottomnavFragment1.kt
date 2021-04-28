@@ -23,6 +23,7 @@ class BottomnavFragment1 : Fragment() {
     }
 
     //메모리에 올라갔을 때
+    //OnCreate() : 프래금먼트가 액티비티에 호출을 받아 생성되는 시점에 호출되는 메서드
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
