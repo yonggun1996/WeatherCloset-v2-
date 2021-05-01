@@ -26,6 +26,8 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
     private var flag = false
     private var latitude = 0.0
     private var longitude = 0.0
+    private var now_item = 0
+    var fragment3_date_time_List : ArrayList<Long> = ArrayList<Long>()
     val TAG = "BottomnavMain"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,9 +44,22 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
         supportFragmentManager.beginTransaction().add(R.id.bottomnav_framelayout, storeFragment).commit()
     }
 
-    fun viewConfilmWeather(){//설정한 날씨를 확인하게끔 해주는 메서드 , Activity에서 요청을 해서 띄우게끔 한다
+    fun viewConfilmWeather(list : ArrayList<Long>){//설정한 날씨를 확인하게끔 해주는 메서드 , Activity에서 요청을 해서 띄우게끔 한다
+        val bnf3 = BottomnavFragment3()
+        var bnf3_1 = BottomnavFragment3_1()//BottomnavFragment2 프래그먼트로 넘기기 위해 변수 선언
+        var bundle = Bundle()//프래그먼트는 Bundle로 데이터를 주고 받아야 해서 Bundle 객체 선언
+        bundle.putDouble("latitude",latitude)//bundle로 데이터를 저장하는 방법, "latitude"는 키가 되고 기존에 구했던 위도를 저장한다 마찬가질 아래는 경도를 저정한다
+        bundle.putDouble("longitude",longitude)
+        fragment3_date_time_List = list
+        Log.d(TAG,"${fragment3_date_time_List.get(0)}")
+        //bundle.putParcelableArrayList("datelist",fragment3_date_time_List)
+        bundle.putSerializable("datelist",fragment3_date_time_List)
+
+
+        bnf3_1.arguments = bundle
         confilm_weatherFragment = BottomnavFragment3_1.newInstance()
-        supportFragmentManager.beginTransaction().replace(R.id.bottomnav_framelayout, confilm_weatherFragment).commit()//fragment3_1으로 교체
+        supportFragmentManager.beginTransaction().replace(R.id.bottomnav_framelayout, bnf3_1).commit()//fragment3_1으로 교체
+        now_item = 4
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -68,18 +83,24 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
                 transaction.commit()
             }
             R.id.setting_search -> {
-                setting_searchFragment = BottomnavFragment3.newInstance()
+                if(now_item == 4){
+                    viewConfilmWeather(fragment3_date_time_List)
+                }else{
+                    setting_searchFragment = BottomnavFragment3.newInstance()
 
-                var bnf3 = BottomnavFragment3()//BottomnavFragment2 프래그먼트로 넘기기 위해 변수 선언
-                var bundle = Bundle()//프래그먼트는 Bundle로 데이터를 주고 받아야 해서 Bundle 객체 선언
-                bundle.putDouble("latitude",latitude)//bundle로 데이터를 저장하는 방법, "latitude"는 키가 되고 기존에 구했던 위도를 저장한다 마찬가질 아래는 경도를 저정한다
-                bundle.putDouble("longitude",longitude)
+                    var bnf3 = BottomnavFragment3()//BottomnavFragment2 프래그먼트로 넘기기 위해 변수 선언
+                    var bundle = Bundle()//프래그먼트는 Bundle로 데이터를 주고 받아야 해서 Bundle 객체 선언
+                    bundle.putDouble("latitude",latitude)//bundle로 데이터를 저장하는 방법, "latitude"는 키가 되고 기존에 구했던 위도를 저장한다 마찬가질 아래는 경도를 저정한다
+                    bundle.putDouble("longitude",longitude)
 
-                bnf3.arguments = bundle
+                    bnf3.arguments = bundle
 
-                val transaction = supportFragmentManager.beginTransaction()
-                transaction.replace(R.id.bottomnav_framelayout, bnf3)
-                transaction.commit()
+                    val transaction = supportFragmentManager.beginTransaction()
+                    transaction.replace(R.id.bottomnav_framelayout, bnf3)
+                    transaction.commit()
+                    now_item = 3
+                }
+
             }
 
         }
@@ -157,6 +178,29 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
             }else{
                 Toast.makeText(this,"권한이 없어 해당 기능을 실행할 수 없습니다.",Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    override fun onBackPressed() {
+        if(now_item == 4){
+            //BottomnavFragment3_1에 있는 requestQueue와 settingtime_list를 전부 지운다
+            var bnf3_1 = BottomnavFragment3_1()
+            bnf3_1.settingtime_list.clear()
+
+            //3번으로 리플레이스
+            var bnf3 = BottomnavFragment3()//BottomnavFragment3 프래그먼트로 넘기기 위해 변수 선언
+            var bundle = Bundle()//프래그먼트는 Bundle로 데이터를 주고 받아야 해서 Bundle 객체 선언
+            bundle.putDouble("latitude",latitude)//bundle로 데이터를 저장하는 방법, "latitude"는 키가 되고 기존에 구했던 위도를 저장한다 마찬가질 아래는 경도를 저정한다
+            bundle.putDouble("longitude",longitude)
+
+            bnf3.arguments = bundle
+
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.bottomnav_framelayout, bnf3)
+            transaction.commit()
+            now_item = 3
+        }else{
+            super.onBackPressed()
         }
     }
 }

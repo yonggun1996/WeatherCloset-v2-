@@ -305,7 +305,7 @@ class BottomnavFragment3 : Fragment() {
 
     private fun moveActivity(){
         if(latitude != null && longitude != null){
-            mainactivity?.viewConfilmWeather()
+            mainactivity?.viewConfilmWeather(date_time_List)
         }else{
             Toast.makeText(context,"위치권한을 설정해 주세요",Toast.LENGTH_SHORT).show()
         }
