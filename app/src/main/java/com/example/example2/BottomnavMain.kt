@@ -21,6 +21,7 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
     private lateinit var storeFragment : BottomnavFragment1
     private lateinit var now_searchFragment : BottomnavFragment2
     private lateinit var setting_searchFragment : BottomnavFragment3
+    private lateinit var confilm_weatherFragment : BottomnavFragment3_1
     private val REQUEST_CODE_LOCATION = 2
     private var flag = false
     private var latitude = 0.0
@@ -39,6 +40,11 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
 
         storeFragment = BottomnavFragment1.newInstance()
         supportFragmentManager.beginTransaction().add(R.id.bottomnav_framelayout, storeFragment).commit()
+    }
+
+    fun viewConfilmWeather(){//설정한 날씨를 확인하게끔 해주는 메서드 , Activity에서 요청을 해서 띄우게끔 한다
+        confilm_weatherFragment = BottomnavFragment3_1.newInstance()
+        supportFragmentManager.beginTransaction().replace(R.id.bottomnav_framelayout, confilm_weatherFragment).commit()//fragment3_1으로 교체
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -75,6 +81,7 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
                 transaction.replace(R.id.bottomnav_framelayout, bnf3)
                 transaction.commit()
             }
+
         }
 
         return true;
@@ -152,7 +159,6 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
             }
         }
     }
-
 }
 
 
