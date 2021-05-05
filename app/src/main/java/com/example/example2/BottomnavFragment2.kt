@@ -1,5 +1,6 @@
 package com.example.example2
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -14,11 +15,12 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.activity_now_weather.*
-import kotlinx.android.synthetic.main.activity_now_weather.text_coat
-import kotlinx.android.synthetic.main.activity_now_weather.text_other
-import kotlinx.android.synthetic.main.activity_now_weather.text_pants
-import kotlinx.android.synthetic.main.activity_now_weather.text_shirt
+import kotlinx.android.synthetic.main.fragment_bottomnav2.*
+import kotlinx.android.synthetic.main.fragment_bottomnav2.text_coat
+import kotlinx.android.synthetic.main.fragment_bottomnav2.text_other
+import kotlinx.android.synthetic.main.fragment_bottomnav2.text_pants
+import kotlinx.android.synthetic.main.fragment_bottomnav2.text_shirt
+import java.lang.NullPointerException
 import java.lang.StringBuilder
 
 // TODO: Rename parameter arguments, choose names that match
@@ -40,8 +42,15 @@ class BottomnavFragment2 : Fragment() {
     lateinit var requestQueue : RequestQueue
     private val TAG = "BottomnavFragment2"
     private var flag_temp = 0
+    private lateinit var thiscontext : Context
+    private lateinit var thisactivity : Activity
+    var settingimage = true//이 프래그먼트에서 날씨 아이콘이 로드가 됐는지 안됐는지 확인하는 변수
 
     override fun onAttach(context: Context) {
+        thiscontext = context
+        if(context is Activity){
+            thisactivity = context as Activity
+        }
         super.onAttach(context)
     }
 
@@ -68,7 +77,7 @@ class BottomnavFragment2 : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         //위치 권한 설정
-
+        settingimage = false//프래그먼트를 생성할 때에는 이미지가 생성이 안됐기 때문에 false로 한다
         Log.d("BottomnavFragment2", "위도 : ${latitude}/ 경도 : ${longitude}")
         return inflater.inflate(R.layout.fragment_bottomnav2, container, false)
     }
@@ -118,10 +127,16 @@ class BottomnavFragment2 : Fragment() {
     }
 
     private fun set_image(icon_code : String){//current_weather_icon의 이미지를 설정하는 메소드
-        val url = "http://openweathermap.org/img/wn/${icon_code}@2x.png"
-        Glide.with(this)
-            .load(url)
-            .into(current_weather_icon)
+        try {//이미지가 로드가 안되면 NullPointerException을 일으킨다. 그래서 예외처리를 했다.
+            val url = "http://openweathermap.org/img/wn/${icon_code}@2x.png"
+            Glide.with(thiscontext)
+                .load(url)
+                .into(now_weather_icon)
+        }catch (e: NullPointerException){//이미지가 설정도 안됐는데 넘기려고 한다면 토스트메세지를 띄운다
+            Toast.makeText(thiscontext,"이미지를 로딩중입니다...",Toast.LENGTH_SHORT).show()
+        }
+        settingimage = true//이미지를 설정하면 settingimage변수를 true로 변환한다
+
     }
 
     private fun set_nowWeather(icon_code : String) : String{//아이콘 코드에 따라 현재 날씨를 텍슽트로 표현하는 메소드

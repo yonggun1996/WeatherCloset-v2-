@@ -28,7 +28,7 @@
         <!-- 이미지 삽입 -->
 
         <ImageView
-            android:id="@+id/current_weather_icon"
+            android:id="@+id/now_weather_icon"
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:layout_gravity="center"
