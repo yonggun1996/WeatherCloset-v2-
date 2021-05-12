@@ -112,6 +112,7 @@ class BottomnavFragment2 : Fragment() {
                 set_other()
             },
             Response.ErrorListener {
+                settingimage = true
                 Toast.makeText(context,"데이터를 호출하는데 실패했습니다.",Toast.LENGTH_SHORT).show()
             }
         )

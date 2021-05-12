@@ -37,12 +37,14 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
 
         bottomnavigation.setOnNavigationItemSelectedListener(this)
 
-        if(isLocationPermissionGranted()){
+        if(isLocationPermissionGranted()) {
             getCurrentLocation()
         }
 
-        storeFragment = BottomnavFragment1.newInstance()
-        supportFragmentManager.beginTransaction().add(R.id.bottomnav_framelayout, storeFragment).commit()
+        Fragment1SetGPS()
+
+        //storeFragment = BottomnavFragment1.newInstance()
+        //supportFragmentManager.beginTransaction().add(R.id.bottomnav_framelayout, storeFragment).commit()
     }
 
     fun viewConfilmWeather(list : ArrayList<Long>){//설정한 날씨를 확인하게끔 해주는 메서드 , Activity에서 요청을 해서 띄우게끔 한다
@@ -162,7 +164,7 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
                 latitude = location.latitude
                 longitude = location.longitude
                 Log.d(TAG,"위도 : ${latitude}/ 경도 : ${longitude}")
-
+                Fragment1SetGPS()
             }else{
                 Toast.makeText(this,"위치를 알 수 없습니다.",Toast.LENGTH_SHORT).show()
             }
@@ -205,6 +207,23 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
         }else{
             super.onBackPressed()
         }
+    }
+
+    fun Fragment1SetGPS(){
+        var bnf1 = BottomnavFragment1()
+        var bundle = Bundle()
+        bundle.putDouble("latitude",latitude)//bundle로 데이터를 저장하는 방법, "latitude"는 키가 되고 기존에 구했던 위도를 저장한다 마찬가질 아래는 경도를 저정한다
+        bundle.putDouble("longitude",longitude)
+
+        Log.d(TAG, "위도 : ${latitude} / 경도 : ${longitude}")
+
+        bnf1.arguments = bundle
+
+        val transaction = supportFragmentManager.beginTransaction()
+        //storeFragment = BottomnavFragment1.newInstance()
+        //supportFragmentManager.beginTransaction().add(R.id.bottomnav_framelayout, bnf1).commit()
+        transaction.add(R.id.bottomnav_framelayout, bnf1)
+        transaction.commit()
     }
 }
 
