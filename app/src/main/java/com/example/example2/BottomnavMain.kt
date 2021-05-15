@@ -48,7 +48,6 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
     }
 
     fun viewConfilmWeather(list : ArrayList<Long>){//설정한 날씨를 확인하게끔 해주는 메서드 , Activity에서 요청을 해서 띄우게끔 한다
-        val bnf3 = BottomnavFragment3()
         var bnf3_1 = BottomnavFragment3_1()//BottomnavFragment2 프래그먼트로 넘기기 위해 변수 선언
         var bundle = Bundle()//프래그먼트는 Bundle로 데이터를 주고 받아야 해서 Bundle 객체 선언
         bundle.putDouble("latitude",latitude)//bundle로 데이터를 저장하는 방법, "latitude"는 키가 되고 기존에 구했던 위도를 저장한다 마찬가질 아래는 경도를 저정한다

@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_bottomnav1.*
 import okhttp3.*
 import org.json.JSONObject
@@ -53,9 +54,10 @@ class BottomnavFragment1 : Fragment() {
 
             var latitude = it.getDouble("latitude")
             var longitude = it.getDouble("longitude")
-            Log.d("Bottomnav1","받아온 결과 -> 위도 : ${latitude} / 경도 : ${longitude}")
             this.latitude = latitude
             this.longitude = longitude
+
+            Log.d("Bottomnav1","받아온 결과 -> 위도 : ${this.latitude} / 경도 : ${this.longitude}")
         }
 
 
@@ -69,7 +71,9 @@ class BottomnavFragment1 : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-        weather_jsonparse()
+        if(this.latitude != 0.0 && this.longitude != 0.0){//위도와 경도가 받아들어져 왔다면 json 데이터를 읽어들인다
+            weather_jsonparse()
+        }
         return inflater.inflate(R.layout.fragment_bottomnav1, container, false)
     }
 
@@ -96,6 +100,9 @@ class BottomnavFragment1 : Fragment() {
             override fun onResponse(call: Call, response: Response) {
                 var str_responce = response?.body?.string()
                 println("날씨 데이터 얻어오기 :" + str_responce)
+                var weatherParse = Gson().fromJson<WeatherParse>(str_responce,WeatherParse::class.java)
+                var now_Temp = Math.round(weatherParse.current!!.temp)
+                println("현재 기온 : ${now_Temp}")
             }
         })
     }
