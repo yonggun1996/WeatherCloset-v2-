@@ -32,6 +32,7 @@ class BottomnavFragment1 : Fragment() {
     private var longitude = 0.0
     private lateinit var fragment1Context: Context
     private lateinit var fragment1Activity: Activity
+    lateinit var closetList : List<String>
 
     //프래그먼트를 안고있는 액티비티에 붙었을 때
     override fun onAttach(context: Context) {
@@ -101,10 +102,40 @@ class BottomnavFragment1 : Fragment() {
                 var str_responce = response?.body?.string()
                 println("날씨 데이터 얻어오기 :" + str_responce)
                 var weatherParse = Gson().fromJson<WeatherParse>(str_responce,WeatherParse::class.java)
-                var now_Temp = Math.round(weatherParse.current!!.temp)
-                println("현재 기온 : ${now_Temp}")
+                var now_Temp = Math.round(weatherParse.current!!.temp)//OKHTTP로 찾아낸 현재 기온
+                println("현재 기온 : ${now_Temp.toInt()}")
+
+                setClosetList(now_Temp.toInt())
             }
         })
+    }
+
+    private fun setClosetList(temp : Int){
+        if(temp <= 4){
+            closetList = listOf("패딩","두꺼운 코트","기모티셔츠","두꺼운니트","니트","맨투맨","기모바지")
+        }else if(temp in 5..8){
+            closetList = listOf("코트","가죽자켓","니트","맨투맨","청바지","기모바지")
+        }else if(temp in 9..11){
+            closetList = listOf("자켓","야상","트랜치코트","니트","맨투맨","청바지")
+        }else if(temp in 12..14){
+            closetList = listOf("자켓","야상","트랜치코트","가디건","니트","맨투맨","청바지","면바지")
+        }else if(temp in 15..16){
+            closetList = listOf("자켓","야상","가디건","니트","맨투맨","청바지","면바지")
+        }else if(temp == 17){
+            closetList = listOf("가디건","맨투맨","얇은니트","청바지","면바지")
+        }else if(temp in 18..19){
+            closetList = listOf("가디건","얇은 가디건","맨투맨","긴팔","긴 셔츠","얇은니트","청바지","면바지")
+        }else if(temp in 20..22){
+            closetList = listOf("얇은 가디건","긴팔","긴 셔츠","청바지","면바지")
+        }else if(temp in 23..27){
+            closetList = listOf("반팔","반 셔츠","린넨셔츠","면바지")
+        }else if(temp >= 28){
+            closetList = listOf("민소매","반팔","반 셔츠","린넨셔츠","반바지")
+        }
+
+        for(str in closetList){
+            println("설정된 리스트의 값 : ${str}")
+        }
     }
 
 }
