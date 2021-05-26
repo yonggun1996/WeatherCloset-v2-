@@ -2,6 +2,7 @@ package com.example.example2
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
@@ -32,19 +33,20 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
     var bnf2 = BottomnavFragment2()//BottomnavFragment2 프래그먼트로 넘기기 위해 변수 선언
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        /*main에서 날씨에 대한 정보를 받아온 후 네비게이션 바를 누르면 그에 따른 화면을 보여주도록 수정 예정*/
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bottomnavigation)
 
+        //스플래시에서 넘긴 위도와 경도를 받는다
+        val i = intent
+        latitude = i.extras?.getDouble("latitude",0.0)!!//인텐트로 위도 얻어옴
+        longitude = i.extras?.getDouble("longitude",0.0)!!//인텐트로 경도 얻어옴
+        println("스플래시에서 넘겨받음 / 위도 : ${latitude} / 경도 : ${longitude}")
+
         bottomnavigation.setOnNavigationItemSelectedListener(this)
 
-        if(isLocationPermissionGranted()) {
-            getCurrentLocation()
-        }
-
-        Fragment1SetGPS()
-
-        //storeFragment = BottomnavFragment1.newInstance()
-        //supportFragmentManager.beginTransaction().add(R.id.bottomnav_framelayout, storeFragment).commit()
+        storeFragment = BottomnavFragment1.newInstance()
+        supportFragmentManager.beginTransaction().add(R.id.bottomnav_framelayout, storeFragment).commit()
     }
 
     fun viewConfilmWeather(list : ArrayList<Long>){//설정한 날씨를 확인하게끔 해주는 메서드 , Activity에서 요청을 해서 띄우게끔 한다
@@ -112,79 +114,6 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
         }
     }
 
-    private fun isLocationPermissionGranted(): Boolean{
-        val preference = getPreferences(Context.MODE_PRIVATE)
-        val isFirstCheck = preference.getBoolean("isFirstPermissionCheck",true)
-        if(ContextCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
-                //거부를 했을 때 사용자에게 왜 필요한지 이유를 설명
-                Toast.makeText(this,"날씨를 알기 위해선 위치권한이 필요합니다.",Toast.LENGTH_SHORT).show()
-            }else{
-                if(isFirstCheck){
-                    //앱을 처음 실행한 경우
-                    preference.edit().putBoolean("isFirstPermissionCheck",false).apply()
-                    ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),REQUEST_CODE_LOCATION)
-                }else{
-                    Toast.makeText(this,"위치가 파악이 안돼 날씨 데이터를 가져올 수 없습니다.",Toast.LENGTH_SHORT).show()
-                }
-            }
-            return false
-        }else{
-            return true
-        }
-
-    }
-
-    fun getCurrentLocation(){
-        val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
-        }
-        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location: Location? ->
-            if(location !== null){//위치가 파악된 경우
-                Log.d(TAG,"위치를 찾았습니다.")
-                flag = true
-
-                //위도와 경도를 저장하는 변수
-                latitude = location.latitude
-                longitude = location.longitude
-                Log.d(TAG,"위도 : ${latitude}/ 경도 : ${longitude}")
-                Fragment1SetGPS()
-            }else{
-                Toast.makeText(this,"위치를 알 수 없습니다.",Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode == REQUEST_CODE_LOCATION){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                getCurrentLocation()
-            }else{
-                Toast.makeText(this,"권한이 없어 해당 기능을 실행할 수 없습니다.",Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
     override fun onBackPressed() {
         if(now_item == 4){
             //BottomnavFragment3_1에 있는 requestQueue와 settingtime_list를 전부 지운다
@@ -204,26 +133,13 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
             transaction.commit()
             now_item = 3
         }else{
-            super.onBackPressed()
+            //뒤로가기가 아닌 프로그램 종료
+            moveTaskToBack(true)
+            finishAndRemoveTask()
+            android.os.Process.killProcess(android.os.Process.myPid())
         }
     }
 
-    fun Fragment1SetGPS(){
-        var bnf1 = BottomnavFragment1()
-        var bundle = Bundle()
-        bundle.putDouble("latitude",latitude)//bundle로 데이터를 저장하는 방법, "latitude"는 키가 되고 기존에 구했던 위도를 저장한다 마찬가질 아래는 경도를 저정한다
-        bundle.putDouble("longitude",longitude)
-
-        Log.d(TAG, "위도 : ${latitude} / 경도 : ${longitude}")
-
-        bnf1.arguments = bundle
-
-        val transaction = supportFragmentManager.beginTransaction()
-        //storeFragment = BottomnavFragment1.newInstance()
-        //supportFragmentManager.beginTransaction().add(R.id.bottomnav_framelayout, bnf1).commit()
-        transaction.add(R.id.bottomnav_framelayout, bnf1)
-        transaction.commit()
-    }
 }
 
 
