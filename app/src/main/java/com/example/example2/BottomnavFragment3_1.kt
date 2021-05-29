@@ -81,7 +81,7 @@ class BottomnavFragment3_1 : Fragment() {
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        url = "https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=24,daily=2&appid=APPKEY&units=metric"
+        url = "https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=24,daily=2&appid=APPEKY&units=metric"
         requestQueue = Volley.newRequestQueue(context)
         val jsonObjectRequest = JsonObjectRequest(
             Request.Method.GET,url,null,

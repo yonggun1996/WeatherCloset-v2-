@@ -20,7 +20,6 @@ import com.google.android.gms.location.LocationServices
 class SplashActivity: AppCompatActivity() {
 
     private val REQUEST_CODE_LOCATION = 2
-    val SPLASH_TIME : Long = 1500
     var latitude : Double = 0.0
     var longitude : Double = 0.0
     var flag = false

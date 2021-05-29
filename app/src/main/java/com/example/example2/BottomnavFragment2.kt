@@ -44,7 +44,10 @@ class BottomnavFragment2 : Fragment() {
     private var flag_temp = 0
     private lateinit var thiscontext : Context
     private lateinit var thisactivity : Activity
-    var settingimage = true//이 프래그먼트에서 날씨 아이콘이 로드가 됐는지 안됐는지 확인하는 변수
+    private var now_temp = 0.0
+    private var now_feelliek = 0.0
+    private var image_code = ""
+    //var settingimage = true//이 프래그먼트에서 날씨 아이콘이 로드가 됐는지 안됐는지 확인하는 변수
 
     override fun onAttach(context: Context) {
         thiscontext = context
@@ -62,12 +65,13 @@ class BottomnavFragment2 : Fragment() {
             param2 = it.getString(ARG_PARAM2)
 
             //번들로 넘겼던 객체를 가져오는 방법
-            var latitude = it.getDouble("latitude")
-            var longitude = it.getDouble("longitude")
-            Log.d("Bottomnav2","받아온 결과 -> 위도 : ${latitude} / 경도 : ${longitude}")
+            //var latitude = it.getDouble("latitude")
+            //var longitude = it.getDouble("longitude")
+            //Log.d("Bottomnav2","받아온 결과 -> 위도 : ${latitude} / 경도 : ${longitude}")
 
-            this.latitude = latitude
-            this.longitude = longitude
+            this.now_temp = it.getDouble("now_Temp")
+            this.now_feelliek = it.getDouble("now_feellike")
+            this.image_code = it.getString("now_imageCode")!!
         }
     }
 
@@ -77,46 +81,27 @@ class BottomnavFragment2 : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         //위치 권한 설정
-        settingimage = false//프래그먼트를 생성할 때에는 이미지가 생성이 안됐기 때문에 false로 한다
+        //settingimage = false//프래그먼트를 생성할 때에는 이미지가 생성이 안됐기 때문에 false로 한다
         Log.d("BottomnavFragment2", "위도 : ${latitude}/ 경도 : ${longitude}")
         return inflater.inflate(R.layout.fragment_bottomnav2, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {//ui에 관한 작업을 하는 코드
-        val url = "https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=24,daily=2&appid=APPKEY&units=metric"
-        requestQueue = Volley.newRequestQueue(context);
 
-        val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null,
+        set_image(image_code)//이미지 설정
+        now_temp_tv.setText("현재온도 : ${Math.round(now_temp)}")//현재 온도 설정
+        feels_like_tv.setText("체감온도 : ${Math.round(now_feelliek)}")//체감 온도 설정
 
-            Response.Listener { response ->
-                val jsonObject = response.getJSONObject("current")//current object를 불러온다
-                val temp = jsonObject["temp"].toString()//현재 기온
-                val feels_like = jsonObject["feels_like"].toString()//체감기온
+        val now_weather_str = set_nowWeather(image_code)
+        now_weather.setText(now_weather_str)
 
-                var current_weather_Array = jsonObject.getJSONArray("weather")//current object에 있는 weather 배열을 가져온다
-                var current_weather_Object = current_weather_Array.getJSONObject(0)//weather배열의 id를 가져오는 코드
-                var icon_code = current_weather_Object.getString("icon")//현재 날씨에 대한 이미지 아이콘 코드
+        flag_temp = Math.round(now_temp).toInt()
 
-                set_image(icon_code)//이미지 설정
-                now_temp_tv.setText("현재온도 : ${Math.round(temp.toDouble())}")//현재 온도 설정
-                feels_like_tv.setText("체감온도 : ${Math.round(feels_like.toDouble())}")//체감 온도 설정
+        set_outer()
+        set_shirt()
+        set_pants()
+        set_other()
 
-                val now_weather_str = set_nowWeather(icon_code)
-                now_weather.setText(now_weather_str)
-
-                flag_temp = Math.round(temp.toDouble()).toInt()
-
-                set_outer()
-                set_shirt()
-                set_pants()
-                set_other()
-            },
-            Response.ErrorListener {
-                settingimage = true
-                Toast.makeText(context,"데이터를 호출하는데 실패했습니다.",Toast.LENGTH_SHORT).show()
-            }
-        )
-        requestQueue.add(jsonObjectRequest)
         super.onActivityCreated(savedInstanceState)
     }
 
@@ -136,7 +121,7 @@ class BottomnavFragment2 : Fragment() {
         }catch (e: NullPointerException){//이미지가 설정도 안됐는데 넘기려고 한다면 토스트메세지를 띄운다
             Toast.makeText(thiscontext,"이미지를 로딩중입니다...",Toast.LENGTH_SHORT).show()
         }
-        settingimage = true//이미지를 설정하면 settingimage변수를 true로 변환한다
+        //settingimage = true//이미지를 설정하면 settingimage변수를 true로 변환한다
 
     }
 

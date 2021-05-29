@@ -1,6 +1,7 @@
 package com.example.example2
 
 import android.Manifest
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -9,13 +10,17 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.replace
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_bottomnavigation.*
+import okhttp3.*
+import java.io.IOException
 
 class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener{
 
@@ -24,11 +29,15 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
     private lateinit var setting_searchFragment : BottomnavFragment3
     private lateinit var confilm_weatherFragment : BottomnavFragment3_1
     private val REQUEST_CODE_LOCATION = 2
-    private var flag = false
     private var latitude = 0.0
     private var longitude = 0.0
     private var now_item = 0
+    private var getjson = false
+    private var parseData_String = ""
     var fragment3_date_time_List : ArrayList<Long> = ArrayList<Long>()
+    var now_temp = 0.0//현재 기온
+    var now_feellike = 0.0//현재 체감기온
+    var now_imageCode = ""//이미지코드
     val TAG = "BottomnavMain"
     var bnf2 = BottomnavFragment2()//BottomnavFragment2 프래그먼트로 넘기기 위해 변수 선언
 
@@ -43,14 +52,53 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
         longitude = i.extras?.getDouble("longitude",0.0)!!//인텐트로 경도 얻어옴
         println("스플래시에서 넘겨받음 / 위도 : ${latitude} / 경도 : ${longitude}")
 
+        //프로그래스 실행
+        progressbar.visibility = View.INVISIBLE
+        //프로그래스가 실행되는 동안 프래그먼트를 연결할 수 없다
+        //json 데이터 얻어오기(메서드를 만들고 응답받으면 메서드 내에서 다이얼로그 종료)
+        //json 데이터 얻어오면 다이얼로그 종료
+        //이 두가지가 동시에 실행되어야 한다
+
+        weather_jsonparse()
+        println("메인에서 json 파일을 얻어온 결과 : ${parseData_String}")
+
         bottomnavigation.setOnNavigationItemSelectedListener(this)
 
         storeFragment = BottomnavFragment1.newInstance()
         supportFragmentManager.beginTransaction().add(R.id.bottomnav_framelayout, storeFragment).commit()
     }
 
+    private fun weather_jsonparse(){
+        var weather_url = "https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=24,daily=2&appid=APPEKY&units=metric"
+        val client = OkHttpClient()
+        val request = Request.Builder().url(weather_url).build()
+
+        client.newCall(request).enqueue(object  : Callback{
+            override fun onFailure(call: Call, e: IOException) {
+                //스레드가 달라서 그런지 context 불러들이는데 애를 먹는다 구글링 해보자
+                //Toast.makeText(this,"데이터를 부르는 중입니다...",Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                parseData_String = response?.body?.string()!!
+                println("데이터 얻어온 결과 : ${parseData_String}")
+                getjson = true
+                progressbar.visibility = View.INVISIBLE
+
+                var weatherParse = Gson().fromJson(parseData_String,WeatherParse::class.java)
+                now_temp = weatherParse.current!!.temp
+                now_feellike = weatherParse.current!!.feels_like
+                //now_imageCode = weatherParse.current!!.weather[3].toString() -> 잘못된 방식
+
+                var now_weather_Array = weatherParse.current!!.weather//current 파라미터에서 리스트로 선언
+                now_imageCode = now_weather_Array[0].icon//그 리스트를 가져오면 weatherList를 받아와 이미지 코드를 얻게 된다
+                print("이미지 코드 : ${now_imageCode}")
+            }
+       })
+    }
+
     fun viewConfilmWeather(list : ArrayList<Long>){//설정한 날씨를 확인하게끔 해주는 메서드 , Activity에서 요청을 해서 띄우게끔 한다
-        var bnf3_1 = BottomnavFragment3_1()//BottomnavFragment2 프래그먼트로 넘기기 위해 변수 선언
+        var bnf3_1 = BottomnavFragment3_1()//BottomnavFragment3_1 프래그먼트로 넘기기 위해 변수 선언
         var bundle = Bundle()//프래그먼트는 Bundle로 데이터를 주고 받아야 해서 Bundle 객체 선언
         bundle.putDouble("latitude",latitude)//bundle로 데이터를 저장하는 방법, "latitude"는 키가 되고 기존에 구했던 위도를 저장한다 마찬가질 아래는 경도를 저정한다
         bundle.putDouble("longitude",longitude)
@@ -66,7 +114,7 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        if(bnf2.settingimage){//Bottomnavigation2에서 이미지를 설정했다면 다른 프래그먼트로 이동하게끔 설정
+        if(getjson){//아직 json데이터를 읽지 못했다면 프래그먼트를 붙일 수 없다
             when(item.itemId){
                 R.id.store ->{
                     storeFragment = BottomnavFragment1.newInstance()
@@ -76,8 +124,9 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
                     now_searchFragment = BottomnavFragment2.newInstance()
 
                     var bundle = Bundle()//프래그먼트는 Bundle로 데이터를 주고 받아야 해서 Bundle 객체 선언
-                    bundle.putDouble("latitude",latitude)//bundle로 데이터를 저장하는 방법, "latitude"는 키가 되고 기존에 구했던 위도를 저장한다 마찬가질 아래는 경도를 저정한다
-                    bundle.putDouble("longitude",longitude)
+                    bundle.putDouble("now_Temp",now_temp)//bundle로 데이터를 저장하는 방법, "latitude"는 키가 되고 기존에 구했던 위도를 저장한다 마찬가질 아래는 경도를 저정한다
+                    bundle.putDouble("now_feellike",now_feellike)
+                    bundle.putString("now_imageCode", now_imageCode)
 
                     bnf2.arguments = bundle
 
@@ -108,8 +157,8 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
 
             }
             return true
-        }else{//이미지 설정이 안된경우
-            Toast.makeText(this,"이미지 로딩중입니다...",Toast.LENGTH_SHORT).show()
+        }else{//json데이터를 아직 불러오지 않았을 경우
+            Toast.makeText(this,"데이터를 부르는 중입니다...",Toast.LENGTH_SHORT).show()
             return false
         }
     }
