@@ -7,7 +7,7 @@
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:id="@+id/now_temp"
+        android:id="@+id/fr1_now_temp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textSize="20dp"/>

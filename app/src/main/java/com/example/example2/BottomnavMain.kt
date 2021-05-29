@@ -39,6 +39,7 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
     var now_feellike = 0.0//현재 체감기온
     var now_imageCode = ""//이미지코드
     val TAG = "BottomnavMain"
+    var bnf1 = BottomnavFragment1()
     var bnf2 = BottomnavFragment2()//BottomnavFragment2 프래그먼트로 넘기기 위해 변수 선언
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +54,7 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
         println("스플래시에서 넘겨받음 / 위도 : ${latitude} / 경도 : ${longitude}")
 
         //프로그래스 실행
-        progressbar.visibility = View.INVISIBLE
+        progressbar.visibility = View.VISIBLE
         //프로그래스가 실행되는 동안 프래그먼트를 연결할 수 없다
         //json 데이터 얻어오기(메서드를 만들고 응답받으면 메서드 내에서 다이얼로그 종료)
         //json 데이터 얻어오면 다이얼로그 종료
@@ -64,12 +65,12 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
 
         bottomnavigation.setOnNavigationItemSelectedListener(this)
 
-        storeFragment = BottomnavFragment1.newInstance()
-        supportFragmentManager.beginTransaction().add(R.id.bottomnav_framelayout, storeFragment).commit()
+        //storeFragment = BottomnavFragment1.newInstance()
+        //supportFragmentManager.beginTransaction().add(R.id.bottomnav_framelayout, storeFragment).commit()
     }
 
     private fun weather_jsonparse(){
-        var weather_url = "https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=24,daily=2&appid=APPEKY&units=metric"
+        var weather_url = "https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=24,daily=2&appid=APPKEY&units=metric"
         val client = OkHttpClient()
         val request = Request.Builder().url(weather_url).build()
 
@@ -93,6 +94,16 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
                 var now_weather_Array = weatherParse.current!!.weather//current 파라미터에서 리스트로 선언
                 now_imageCode = now_weather_Array[0].icon//그 리스트를 가져오면 weatherList를 받아와 이미지 코드를 얻게 된다
                 print("이미지 코드 : ${now_imageCode}")
+                progressbar.visibility = View.INVISIBLE//데이터를 다 받아왔으면 프로그레스바를 숨긴다
+
+                var bundle = Bundle()//프래그먼트는 Bundle로 데이터를 주고 받아야 해서 Bundle 객체 선언
+                bundle.putDouble("now_Temp",now_temp)//bundle로 데이터를 저장하는 방법, "latitude"는 키가 되고 기존에 구했던 위도를 저장한다 마찬가질 아래는 경도를 저정한다
+
+                //데이터를 얻어오면 프래그먼트1에 데이터를 전달해 프래그먼트1 화면을 띄운다
+                bnf1.arguments = bundle
+                val transaction = supportFragmentManager.beginTransaction()
+                transaction.replace(R.id.bottomnav_framelayout, bnf1)
+                transaction.commit()
             }
        })
     }
@@ -118,7 +129,14 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
             when(item.itemId){
                 R.id.store ->{
                     storeFragment = BottomnavFragment1.newInstance()
-                    supportFragmentManager.beginTransaction().replace(R.id.bottomnav_framelayout, storeFragment).commit()
+
+                    var bundle = Bundle()//프래그먼트는 Bundle로 데이터를 주고 받아야 해서 Bundle 객체 선언
+                    bundle.putDouble("now_Temp",now_temp)//bundle로 데이터를 저장하는 방법, "latitude"는 키가 되고 기존에 구했던 위도를 저장한다 마찬가질 아래는 경도를 저정한다
+
+                    bnf1.arguments = bundle
+                    val transaction = supportFragmentManager.beginTransaction()
+                    transaction.replace(R.id.bottomnav_framelayout, bnf1)
+                    transaction.commit()
                 }
                 R.id.now_search -> {
                     now_searchFragment = BottomnavFragment2.newInstance()
