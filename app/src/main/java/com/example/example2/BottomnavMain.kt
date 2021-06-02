@@ -28,7 +28,6 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
     private lateinit var now_searchFragment : BottomnavFragment2
     private lateinit var setting_searchFragment : BottomnavFragment3
     private lateinit var confilm_weatherFragment : BottomnavFragment3_1
-    private val REQUEST_CODE_LOCATION = 2
     private var latitude = 0.0
     private var longitude = 0.0
     private var now_item = 0
@@ -38,6 +37,8 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
     var now_temp = 0.0//현재 기온
     var now_feellike = 0.0//현재 체감기온
     var now_imageCode = ""//이미지코드
+    lateinit var hourly_array : Array<WeatherParse.Hourly>
+    lateinit var hourly_weather_array : Array<WeatherParse.Hourly.Weather>
     val TAG = "BottomnavMain"
     var bnf1 = BottomnavFragment1()
     var bnf2 = BottomnavFragment2()//BottomnavFragment2 프래그먼트로 넘기기 위해 변수 선언
@@ -93,8 +94,15 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
 
                 var now_weather_Array = weatherParse.current!!.weather//current 파라미터에서 리스트로 선언
                 now_imageCode = now_weather_Array[0].icon//그 리스트를 가져오면 weatherList를 받아와 이미지 코드를 얻게 된다
-                print("이미지 코드 : ${now_imageCode}")
+                println("이미지 코드 : ${now_imageCode}")
                 progressbar.visibility = View.INVISIBLE//데이터를 다 받아왔으면 프로그레스바를 숨긴다
+
+                hourly_array = weatherParse.hourly
+                println("0번 인덱스 시간 : ${hourly_array[0].dt}")
+                println("0번 인덱스 온도 : ${hourly_array[0].temp}")
+
+                hourly_weather_array = hourly_array[0].weather
+                println("0번 인덱스 날씨 아이콘 : ${hourly_weather_array[0].icon}")
 
                 var bundle = Bundle()//프래그먼트는 Bundle로 데이터를 주고 받아야 해서 Bundle 객체 선언
                 bundle.putDouble("now_Temp",now_temp)//bundle로 데이터를 저장하는 방법, "latitude"는 키가 되고 기존에 구했던 위도를 저장한다 마찬가질 아래는 경도를 저정한다
@@ -111,12 +119,11 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
     fun viewConfilmWeather(list : ArrayList<Long>){//설정한 날씨를 확인하게끔 해주는 메서드 , Activity에서 요청을 해서 띄우게끔 한다
         var bnf3_1 = BottomnavFragment3_1()//BottomnavFragment3_1 프래그먼트로 넘기기 위해 변수 선언
         var bundle = Bundle()//프래그먼트는 Bundle로 데이터를 주고 받아야 해서 Bundle 객체 선언
-        bundle.putDouble("latitude",latitude)//bundle로 데이터를 저장하는 방법, "latitude"는 키가 되고 기존에 구했던 위도를 저장한다 마찬가질 아래는 경도를 저정한다
-        bundle.putDouble("longitude",longitude)
         fragment3_date_time_List = list
-        Log.d(TAG,"${fragment3_date_time_List.get(0)}")
+        Log.d(TAG,"맨 첫 시간 : ${fragment3_date_time_List.get(0)}")
         //bundle.putParcelableArrayList("datelist",fragment3_date_time_List)
         bundle.putSerializable("datelist",fragment3_date_time_List)//프래그먼트에서 리스트르 옮기기 위해 사용된 메소드
+        bundle.putSerializable("hourlyList", hourly_array)//시간별 온도의 데이터를 넘겨준다
 
         bnf3_1.arguments = bundle
         confilm_weatherFragment = BottomnavFragment3_1.newInstance()
