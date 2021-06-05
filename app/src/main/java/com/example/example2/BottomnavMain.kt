@@ -1,21 +1,11 @@
 package com.example.example2
 
-import android.Manifest
-import android.app.ProgressDialog
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.replace
-import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_bottomnavigation.*
@@ -113,6 +103,7 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
                 transaction.replace(R.id.bottomnav_framelayout, bnf1)
                 transaction.commit()
             }
+
        })
     }
 

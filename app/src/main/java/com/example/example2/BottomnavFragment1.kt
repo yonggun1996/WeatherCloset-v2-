@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_bottomnav1.*
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,6 +24,7 @@ class BottomnavFragment1 : Fragment() {
     private lateinit var fragment1Context: Context
     private lateinit var fragment1Activity: Activity
     lateinit var closetList : List<String>
+    var setting_closetList : ArrayList<Fragment1OutData> = ArrayList<Fragment1OutData>()
 
     //프래그먼트를 안고있는 액티비티에 붙었을 때
     override fun onAttach(context: Context) {
@@ -69,37 +71,45 @@ class BottomnavFragment1 : Fragment() {
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        fr1_now_temp.setText("현재 온도 : ${int_now_temp}")
+        setClosetList()
+
+        for(str in closetList){
+            setting_closetList.add(Fragment1OutData(str))
+            println("설정된 리스트의 값 : ${str}")
+        }
+
+        val adapter = Fragment1OutAdapter(setting_closetList)
+        now_temp_rv.adapter = adapter
+        now_temp_rv.layoutManager = LinearLayoutManager(context).also {
+            it.orientation = LinearLayoutManager.VERTICAL
+        }
         super.onActivityCreated(savedInstanceState)
     }
 
 
-    private fun setClosetList(temp : Int){
-        if(temp <= 4){
+    private fun setClosetList(){
+        if(int_now_temp <= 4){
             closetList = listOf("패딩","두꺼운 코트","기모티셔츠","두꺼운니트","니트","맨투맨","기모바지")
-        }else if(temp in 5..8){
+        }else if(int_now_temp in 5..8){
             closetList = listOf("코트","가죽자켓","니트","맨투맨","청바지","기모바지")
-        }else if(temp in 9..11){
+        }else if(int_now_temp in 9..11){
             closetList = listOf("자켓","야상","트랜치코트","니트","맨투맨","청바지")
-        }else if(temp in 12..14){
+        }else if(int_now_temp in 12..14){
             closetList = listOf("자켓","야상","트랜치코트","가디건","니트","맨투맨","청바지","면바지")
-        }else if(temp in 15..16){
+        }else if(int_now_temp in 15..16){
             closetList = listOf("자켓","야상","가디건","니트","맨투맨","청바지","면바지")
-        }else if(temp == 17){
+        }else if(int_now_temp == 17){
             closetList = listOf("가디건","맨투맨","얇은니트","청바지","면바지")
-        }else if(temp in 18..19){
+        }else if(int_now_temp in 18..19){
             closetList = listOf("가디건","얇은 가디건","맨투맨","긴팔","긴 셔츠","얇은니트","청바지","면바지")
-        }else if(temp in 20..22){
+        }else if(int_now_temp in 20..22){
             closetList = listOf("얇은 가디건","긴팔","긴 셔츠","청바지","면바지")
-        }else if(temp in 23..27){
+        }else if(int_now_temp in 23..27){
             closetList = listOf("반팔","반 셔츠","린넨셔츠","면바지")
-        }else if(temp >= 28){
+        }else if(int_now_temp >= 28){
             closetList = listOf("민소매","반팔","반 셔츠","린넨셔츠","반바지")
         }
 
-        for(str in closetList){
-            println("설정된 리스트의 값 : ${str}")
-        }
     }
 
 }
