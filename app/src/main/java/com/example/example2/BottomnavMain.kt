@@ -11,6 +11,8 @@ import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_bottomnavigation.*
 import okhttp3.*
 import java.io.IOException
+import java.sql.DriverManager.println
+import java.util.*
 
 class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener{
 
@@ -75,7 +77,6 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
                 parseData_String = response?.body?.string()!!
                 println("데이터 얻어온 결과 : ${parseData_String}")
                 getjson = true
-                progressbar.visibility = View.INVISIBLE
 
                 var weatherParse = Gson().fromJson(parseData_String,WeatherParse::class.java)
                 now_temp = weatherParse.current!!.temp
@@ -102,6 +103,7 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
                 val transaction = supportFragmentManager.beginTransaction()
                 transaction.replace(R.id.bottomnav_framelayout, bnf1)
                 transaction.commit()
+                progressbar.visibility = View.INVISIBLE
             }
 
        })

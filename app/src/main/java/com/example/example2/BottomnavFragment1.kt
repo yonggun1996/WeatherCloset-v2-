@@ -4,12 +4,23 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_bottomnav1.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import java.io.*
+import java.net.HttpURLConnection
+import java.net.MalformedURLException
+import java.net.URL
+import java.net.URLEncoder
+import java.util.*
+
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
@@ -71,21 +82,39 @@ class BottomnavFragment1 : Fragment() {
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        setClosetList()
+        setClosetList()//해당 기온에 맞는 옷들을 담는 리스트를 구현한다
+        //네이버 쇼핑 api를 가져오는 함수를 호출한다
+        //코루틴으로 코딩해보자(동기방식)
 
         for(str in closetList){
-            setting_closetList.add(Fragment1OutData(str))
-            println("설정된 리스트의 값 : ${str}")
+            println("${str} 함수 이동")
+            set_coroutine(str)
         }
 
         val adapter = Fragment1OutAdapter(setting_closetList)
         now_temp_rv.adapter = adapter
+        //버튼을 누르면 여기서 화면이 전환되게끔
         now_temp_rv.layoutManager = LinearLayoutManager(context).also {
             it.orientation = LinearLayoutManager.VERTICAL
         }
         super.onActivityCreated(savedInstanceState)
     }
 
+    private fun set_coroutine(closet : String){
+        println("들어온 옷 : ${closet}")
+        CoroutineScope(Dispatchers.Main).launch {
+            var closetJSON = CoroutineScope(Dispatchers.Default).async {
+                //서버단의 작업
+                var closjon = setInRecyclerView(closet)
+                println("JSON Parsing${closet} : ${closjon}")
+            }.await()
+
+            println("${closet} 작업 : ${closetJSON}")
+            //ui단의 작업
+            //작은 rv 작업
+            setting_closetList.add(Fragment1OutData(closet))
+        }
+    }
 
     private fun setClosetList(){
         if(int_now_temp <= 4){
@@ -110,6 +139,88 @@ class BottomnavFragment1 : Fragment() {
             closetList = listOf("민소매","반팔","반 셔츠","린넨셔츠","반바지")
         }
 
+    }
+
+    //네이버 쇼핑 api를 가져온 후 안쪽 RecyclerView를 설정하는 메서드를 만들자
+    private fun setInRecyclerView(keyword : String) : String{
+        val clientId = "" //애플리케이션 클라이언트 아이디값"
+
+        val clientSecret = "" //애플리케이션 클라이언트 시크릿값"
+
+
+        var text: String? = null
+        text = try {
+            URLEncoder.encode(keyword, "UTF-8")
+        } catch (e: UnsupportedEncodingException) {
+            throw RuntimeException("검색어 인코딩 실패", e)
+        }
+
+
+        val apiURL =
+            "https://openapi.naver.com/v1/search/shop?query=$text" // json 결과
+
+        //String apiURL = "https://openapi.naver.com/v1/search/blog.xml?query="+ text; // xml 결과
+
+
+        //String apiURL = "https://openapi.naver.com/v1/search/blog.xml?query="+ text; // xml 결과
+        val requestHeaders: MutableMap<String, String> = HashMap()
+        requestHeaders["X-Naver-Client-Id"] = clientId
+        requestHeaders["X-Naver-Client-Secret"] = clientSecret
+        val responseBody: String? = get(apiURL, requestHeaders)
+
+        return responseBody.toString()
+    }
+
+    private operator fun get(
+        apiUrl: String,
+        requestHeaders: Map<String, String>
+    ): String? {
+        val con: HttpURLConnection = connect(apiUrl)
+        return try {
+            con.setRequestMethod("GET")
+            for ((key, value) in requestHeaders) {
+                con.setRequestProperty(key, value)
+            }
+            val responseCode: Int = con.getResponseCode()
+            if (responseCode == HttpURLConnection.HTTP_OK) { // 정상 호출
+                readBody(con.inputStream)
+            } else { // 에러 발생
+                readBody(con.errorStream)
+            }
+        } catch (e: IOException) {
+            throw java.lang.RuntimeException("API 요청과 응답 실패", e)
+        } finally {
+            con.disconnect()
+        }
+    }
+
+
+    private fun connect(apiUrl: String): HttpURLConnection {
+        return try {
+            val url = URL(apiUrl)
+            url.openConnection() as HttpURLConnection
+        } catch (e: MalformedURLException) {
+            throw java.lang.RuntimeException("API URL이 잘못되었습니다. : $apiUrl", e)
+        } catch (e: IOException) {
+            throw java.lang.RuntimeException("연결이 실패했습니다. : $apiUrl", e)
+        }
+    }
+
+
+    private fun readBody(body: InputStream): String? {
+        val streamReader = InputStreamReader(body)
+        try {
+            BufferedReader(streamReader).use { lineReader ->
+                val responseBody = StringBuilder()
+                var line: String? = lineReader.readLine()
+                while (lineReader.readLine().also({ line = it }) != null) {
+                    responseBody.append(line)
+                }
+                return responseBody.toString()
+            }
+        } catch (e: IOException) {
+            throw java.lang.RuntimeException("API 응답을 읽는데 실패했습니다.", e)
+        }
     }
 
 }
