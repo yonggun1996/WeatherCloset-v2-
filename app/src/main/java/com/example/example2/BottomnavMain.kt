@@ -63,7 +63,7 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
     }
 
     private fun weather_jsonparse(){
-        var weather_url = "https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=24,daily=2&appid=APPKEY&units=metric"
+        var weather_url = "https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=24,daily=2&appid=&units=metric"
         val client = OkHttpClient()
         val request = Request.Builder().url(weather_url).build()
 

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.activity_bottomnavigation.*
 import kotlinx.android.synthetic.main.fragment_bottomnav1.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -82,37 +83,43 @@ class BottomnavFragment1 : Fragment() {
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        setClosetList()//해당 기온에 맞는 옷들을 담는 리스트를 구현한다
-        //네이버 쇼핑 api를 가져오는 함수를 호출한다
-        //코루틴으로 코딩해보자(동기방식)
+        setClosetList()//해당 기온에 맞는 옷들을 담는 리스트를 구현하는 메서드 호출
+        set_coroutine()//네이버 쇼핑 api를 파싱하는 메서드 호출
 
-        for(str in closetList){
-            println("${str} 함수 이동")
-            set_coroutine(str)
-        }
-
-        val adapter = Fragment1OutAdapter(setting_closetList)
-        now_temp_rv.adapter = adapter
-        //버튼을 누르면 여기서 화면이 전환되게끔
-        now_temp_rv.layoutManager = LinearLayoutManager(context).also {
-            it.orientation = LinearLayoutManager.VERTICAL
-        }
         super.onActivityCreated(savedInstanceState)
     }
 
-    private fun set_coroutine(closet : String){
-        println("들어온 옷 : ${closet}")
-        CoroutineScope(Dispatchers.Main).launch {
-            var closetJSON = CoroutineScope(Dispatchers.Default).async {
-                //서버단의 작업
-                var closjon = setInRecyclerView(closet)
-                println("JSON Parsing${closet} : ${closjon}")
-            }.await()
+    override fun onStop() {
+        // 이 프래그먼트가 액티비티에 떼어지면 기존에 가지고있던 옷 리스트의 데이터를 지운다
+        setting_closetList.clear()
+        super.onStop()
+    }
 
-            println("${closet} 작업 : ${closetJSON}")
-            //ui단의 작업
-            //작은 rv 작업
-            setting_closetList.add(Fragment1OutData(closet))
+    //네이버 쇼핑 정보를 가져오기 위해 코루틴을 실행
+    private fun set_coroutine(){
+        CoroutineScope(Dispatchers.Main).launch {//UI 작업을 하는 Main Dispatchers
+            for(str in closetList) {
+                var closjon = ""//json 데이터를 파싱한 결과
+
+                var closetJSON = CoroutineScope(Dispatchers.Default).launch {//네이버 쇼핑 API를 Parsing하는 Default Dispatchers
+                    //서버단의 작업
+                    closjon = setInRecyclerView(str)
+                    println("JSON Parsing${str} : ${closjon}")
+                }.join()//JSON 데이터를 가져올 때 까지 대기한다
+
+                //ui단의 작업
+                //작은 rv 작업
+
+                setting_closetList.add(Fragment1OutData(str))
+
+            }
+
+            val adapter = Fragment1OutAdapter(setting_closetList)
+            now_temp_rv.adapter = adapter
+            //버튼을 누르면 여기서 화면이 전환되게끔
+            now_temp_rv.layoutManager = LinearLayoutManager(context).also {
+                it.orientation = LinearLayoutManager.VERTICAL
+            }
         }
     }
 
@@ -141,7 +148,9 @@ class BottomnavFragment1 : Fragment() {
 
     }
 
-    //네이버 쇼핑 api를 가져온 후 안쪽 RecyclerView를 설정하는 메서드를 만들자
+    //네이버 쇼핑 api의 json 데이터를 파싱하는 메서드
+    //이 라인부터 233라인 까지
+    //출처 : https://developers.naver.com/docs/serviceapi/search/shopping/shopping.md#%EC%87%BC%ED%95%91
     private fun setInRecyclerView(keyword : String) : String{
         val clientId = "" //애플리케이션 클라이언트 아이디값"
 
