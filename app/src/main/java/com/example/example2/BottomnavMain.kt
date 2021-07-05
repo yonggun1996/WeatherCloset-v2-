@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
@@ -23,7 +24,7 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
     private var latitude = 0.0
     private var longitude = 0.0
     private var now_item = 0
-    private var getjson = false
+    var getjson = false
     private var parseData_String = ""
     var fragment3_date_time_List : ArrayList<Long> = ArrayList<Long>()
     var now_temp = 0.0//현재 기온
@@ -34,6 +35,7 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
     val TAG = "BottomnavMain"
     var bnf1 = BottomnavFragment1()
     var bnf2 = BottomnavFragment2()//BottomnavFragment2 프래그먼트로 넘기기 위해 변수 선언
+    //var progress : ProgressBar = findViewById(R.id.progressbar)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         /*main에서 날씨에 대한 정보를 받아온 후 네비게이션 바를 누르면 그에 따른 화면을 보여주도록 수정 예정*/

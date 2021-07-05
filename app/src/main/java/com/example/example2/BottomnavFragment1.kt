@@ -2,6 +2,7 @@ package com.example.example2
 
 import android.app.Activity
 import android.content.Context
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -83,6 +84,7 @@ class BottomnavFragment1 : Fragment() {
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
+        fragment1_progressbar.visibility = View.VISIBLE
         setClosetList()//해당 기온에 맞는 옷들을 담는 리스트를 구현하는 메서드 호출
         set_coroutine()//네이버 쇼핑 api를 파싱하는 메서드 호출
 
@@ -114,13 +116,16 @@ class BottomnavFragment1 : Fragment() {
 
             }
 
+            fragment1_progressbar.visibility = View.INVISIBLE
             val adapter = Fragment1OutAdapter(setting_closetList)
-            now_temp_rv.adapter = adapter
+            now_temp_rv?.adapter = adapter
             //버튼을 누르면 여기서 화면이 전환되게끔
-            now_temp_rv.layoutManager = LinearLayoutManager(context).also {
+            now_temp_rv?.layoutManager = LinearLayoutManager(context).also {
                 it.orientation = LinearLayoutManager.VERTICAL
             }
+
         }
+
     }
 
     private fun setClosetList(){
