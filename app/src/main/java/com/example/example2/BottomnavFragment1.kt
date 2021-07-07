@@ -4,12 +4,14 @@ import android.app.Activity
 import android.content.Context
 import android.opengl.Visibility
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_bottomnavigation.*
 import kotlinx.android.synthetic.main.fragment_bottomnav1.*
 import kotlinx.coroutines.CoroutineScope
@@ -84,7 +86,7 @@ class BottomnavFragment1 : Fragment() {
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        fragment1_progressbar.visibility = View.VISIBLE
+        fragment1_progressbar?.visibility = View.VISIBLE
         setClosetList()//해당 기온에 맞는 옷들을 담는 리스트를 구현하는 메서드 호출
         set_coroutine()//네이버 쇼핑 api를 파싱하는 메서드 호출
 
@@ -105,8 +107,8 @@ class BottomnavFragment1 : Fragment() {
 
                 var closetJSON = CoroutineScope(Dispatchers.Default).launch {//네이버 쇼핑 API를 Parsing하는 Default Dispatchers
                     //서버단의 작업
-                    closjon = setInRecyclerView(str)
-                    println("JSON Parsing${str} : ${closjon}")
+                    closjon = naverjsonparse(str)
+                    //println("JSON Parsing${str} : ${closjon}")
                 }.join()//JSON 데이터를 가져올 때 까지 대기한다
 
                 //ui단의 작업
@@ -116,7 +118,7 @@ class BottomnavFragment1 : Fragment() {
 
             }
 
-            fragment1_progressbar.visibility = View.INVISIBLE
+            fragment1_progressbar?.visibility = View.INVISIBLE
             val adapter = Fragment1OutAdapter(setting_closetList)
             now_temp_rv?.adapter = adapter
             //버튼을 누르면 여기서 화면이 전환되게끔
@@ -129,26 +131,17 @@ class BottomnavFragment1 : Fragment() {
     }
 
     private fun setClosetList(){
-        if(int_now_temp <= 4){
-            closetList = listOf("패딩","두꺼운 코트","기모티셔츠","두꺼운니트","니트","맨투맨","기모바지")
-        }else if(int_now_temp in 5..8){
-            closetList = listOf("코트","가죽자켓","니트","맨투맨","청바지","기모바지")
-        }else if(int_now_temp in 9..11){
-            closetList = listOf("자켓","야상","트랜치코트","니트","맨투맨","청바지")
-        }else if(int_now_temp in 12..14){
-            closetList = listOf("자켓","야상","트랜치코트","가디건","니트","맨투맨","청바지","면바지")
-        }else if(int_now_temp in 15..16){
-            closetList = listOf("자켓","야상","가디건","니트","맨투맨","청바지","면바지")
-        }else if(int_now_temp == 17){
-            closetList = listOf("가디건","맨투맨","얇은니트","청바지","면바지")
-        }else if(int_now_temp in 18..19){
-            closetList = listOf("가디건","얇은 가디건","맨투맨","긴팔","긴 셔츠","얇은니트","청바지","면바지")
-        }else if(int_now_temp in 20..22){
-            closetList = listOf("얇은 가디건","긴팔","긴 셔츠","청바지","면바지")
-        }else if(int_now_temp in 23..27){
-            closetList = listOf("반팔","반 셔츠","린넨셔츠","면바지")
-        }else if(int_now_temp >= 28){
-            closetList = listOf("민소매","반팔","반 셔츠","린넨셔츠","반바지")
+        when{
+            int_now_temp <= 4 -> closetList = listOf("패딩","두꺼운 코트","기모티셔츠","두꺼운니트","니트","맨투맨","기모바지")
+            int_now_temp in 5 .. 8 -> closetList = listOf("코트","가죽자켓","니트","맨투맨","청바지","기모바지")
+            int_now_temp in 9 .. 11 -> closetList = listOf("자켓","야상","트랜치코트","니트","맨투맨","청바지")
+            int_now_temp in 12 .. 14 -> closetList = listOf("자켓","야상","트랜치코트","가디건","니트","맨투맨","청바지","면바지")
+            int_now_temp in 15 .. 16 -> closetList = listOf("자켓","야상","가디건","니트","맨투맨","청바지","면바지")
+            int_now_temp == 17 -> closetList = listOf("가디건","맨투맨","얇은니트","청바지","면바지")
+            int_now_temp in 18 .. 19 -> closetList = listOf("가디건","얇은 가디건","맨투맨","긴팔","긴 셔츠","얇은니트","청바지","면바지")
+            int_now_temp in 20 .. 22 -> closetList = listOf("얇은 가디건","긴팔","긴 셔츠","청바지","면바지")
+            int_now_temp in 23 .. 27 -> closetList = listOf("반팔","반 셔츠","린넨셔츠","면바지")
+            int_now_temp >= 28 -> closetList = listOf("민소매","반팔","반 셔츠","린넨셔츠","반바지")
         }
 
     }
@@ -156,7 +149,7 @@ class BottomnavFragment1 : Fragment() {
     //네이버 쇼핑 api의 json 데이터를 파싱하는 메서드
     //이 라인부터 233라인 까지
     //출처 : https://developers.naver.com/docs/serviceapi/search/shopping/shopping.md#%EC%87%BC%ED%95%91
-    private fun setInRecyclerView(keyword : String) : String{
+    private fun naverjsonparse(keyword : String) : String{
         val clientId = "" //애플리케이션 클라이언트 아이디값"
 
         val clientSecret = "" //애플리케이션 클라이언트 시크릿값"
@@ -182,6 +175,23 @@ class BottomnavFragment1 : Fragment() {
         requestHeaders["X-Naver-Client-Secret"] = clientSecret
         val responseBody: String? = get(apiURL, requestHeaders)
 
+        var result = Html.fromHtml(responseBody, Html.FROM_HTML_MODE_LEGACY).toString()
+        println("JSON Parsing${ keyword} : ${result}")
+
+        var shoppingparse = Gson().fromJson(result, ShoppingParse::class.java)
+        var shopitemarray = shoppingparse.items
+
+        //indices : 배열의 인덱스 범위를 반환
+        for(i in shopitemarray.indices){
+            //변수를 설정한 후 RecyclerView를 만들기
+            println("$i 번째 인덱스의 정보")
+            print("제목 : ${shopitemarray[i].title}   ")
+            print("가격 : ${shopitemarray[i].lprice}  ")
+            print("브랜드 : ${shopitemarray[i].brand}  ")
+            print("이미지 url : ${shopitemarray[i].image}  ")
+            println()
+        }
+
         return responseBody.toString()
     }
 
@@ -191,11 +201,11 @@ class BottomnavFragment1 : Fragment() {
     ): String? {
         val con: HttpURLConnection = connect(apiUrl)
         return try {
-            con.setRequestMethod("GET")
+            con.requestMethod = "GET"
             for ((key, value) in requestHeaders) {
                 con.setRequestProperty(key, value)
             }
-            val responseCode: Int = con.getResponseCode()
+            val responseCode: Int = con.responseCode
             if (responseCode == HttpURLConnection.HTTP_OK) { // 정상 호출
                 readBody(con.inputStream)
             } else { // 에러 발생
@@ -226,8 +236,9 @@ class BottomnavFragment1 : Fragment() {
         try {
             BufferedReader(streamReader).use { lineReader ->
                 val responseBody = StringBuilder()
+                responseBody.append("{")
                 var line: String? = lineReader.readLine()
-                while (lineReader.readLine().also({ line = it }) != null) {
+                while (lineReader.readLine().also { line = it } != null) {
                     responseBody.append(line)
                 }
                 return responseBody.toString()
