@@ -11,8 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_bottomnavigation.*
+import kotlinx.android.synthetic.main.activity_out1viewholder.*
 import kotlinx.android.synthetic.main.fragment_bottomnav1.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +26,7 @@ import java.net.MalformedURLException
 import java.net.URL
 import java.net.URLEncoder
 import java.util.*
+import kotlin.collections.ArrayList
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,8 +41,8 @@ class BottomnavFragment1 : Fragment() {
     private var int_now_temp = 0
     private lateinit var fragment1Context: Context
     private lateinit var fragment1Activity: Activity
-    lateinit var closetList : List<String>
-    var setting_closetList : ArrayList<Fragment1OutData> = ArrayList<Fragment1OutData>()
+    private lateinit var closetList : List<String>
+    private var setting_closetList : ArrayList<Fragment1OutData> = ArrayList()
 
     //프래그먼트를 안고있는 액티비티에 붙었을 때
     override fun onAttach(context: Context) {
@@ -103,18 +106,18 @@ class BottomnavFragment1 : Fragment() {
     private fun set_coroutine(){
         CoroutineScope(Dispatchers.Main).launch {//UI 작업을 하는 Main Dispatchers
             for(str in closetList) {
-                var closjon = ""//json 데이터를 파싱한 결과
+                lateinit var naverapi_list : ArrayList<NaverApiData>//json 데이터를 파싱한 결과
 
                 var closetJSON = CoroutineScope(Dispatchers.Default).launch {//네이버 쇼핑 API를 Parsing하는 Default Dispatchers
                     //서버단의 작업
-                    closjon = naverjsonparse(str)
+                    naverapi_list = ArrayList<NaverApiData>(naverjsonparse(str))
                     //println("JSON Parsing${str} : ${closjon}")
                 }.join()//JSON 데이터를 가져올 때 까지 대기한다
 
                 //ui단의 작업
                 //작은 rv 작업
 
-                setting_closetList.add(Fragment1OutData(str))
+                setting_closetList.add(Fragment1OutData(str, naverapi_list))
 
             }
 
@@ -149,7 +152,7 @@ class BottomnavFragment1 : Fragment() {
     //네이버 쇼핑 api의 json 데이터를 파싱하는 메서드
     //이 라인부터 233라인 까지
     //출처 : https://developers.naver.com/docs/serviceapi/search/shopping/shopping.md#%EC%87%BC%ED%95%91
-    private fun naverjsonparse(keyword : String) : String{
+    private fun naverjsonparse(keyword : String) : ArrayList<NaverApiData>{
         val clientId = "" //애플리케이션 클라이언트 아이디값"
 
         val clientSecret = "" //애플리케이션 클라이언트 시크릿값"
@@ -181,18 +184,20 @@ class BottomnavFragment1 : Fragment() {
         var shoppingparse = Gson().fromJson(result, ShoppingParse::class.java)
         var shopitemarray = shoppingparse.items
 
+        //검색 결과 10개를 토대로 작은 RecyclerView를 만든다
         //indices : 배열의 인덱스 범위를 반환
-        for(i in shopitemarray.indices){
+        var naverdatalist = ArrayList<NaverApiData>()
+        for(i in 0..9){
             //변수를 설정한 후 RecyclerView를 만들기
-            println("$i 번째 인덱스의 정보")
-            print("제목 : ${shopitemarray[i].title}   ")
-            print("가격 : ${shopitemarray[i].lprice}  ")
-            print("브랜드 : ${shopitemarray[i].brand}  ")
-            print("이미지 url : ${shopitemarray[i].image}  ")
-            println()
+            var title = shopitemarray[i].title
+            var price = shopitemarray[i].lprice
+            var brand = shopitemarray[i].brand
+            var image_url = shopitemarray[i].image
+
+            naverdatalist.add(NaverApiData(title, price, brand, image_url))
         }
 
-        return responseBody.toString()
+        return naverdatalist
     }
 
     private operator fun get(
