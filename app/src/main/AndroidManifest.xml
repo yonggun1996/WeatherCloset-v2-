@@ -24,7 +24,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".BottomnavMain"></activity>
+        <activity android:name=".BottomnavMain"
+            android:screenOrientation="portrait"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -38,7 +39,8 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".WeatherActivity"></activity>
-        <activity android:name=".SplashActivity">
+        <activity android:name=".SplashActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
