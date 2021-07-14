@@ -93,13 +93,11 @@ class BottomnavFragment1 : Fragment() {
         setClosetList()//해당 기온에 맞는 옷들을 담는 리스트를 구현하는 메서드 호출
         set_coroutine()//네이버 쇼핑 api를 파싱하는 메서드 호출
 
-        super.onActivityCreated(savedInstanceState)
-    }
-
-    override fun onStop() {
         // 이 프래그먼트가 액티비티에 떼어지면 기존에 가지고있던 옷 리스트의 데이터를 지운다
+        // 더 보기 액티비티로 넘긴 후 다시 돌아오니 에러 발생 clear 하는 시점을 변경
         setting_closetList.clear()
-        super.onStop()
+
+        super.onActivityCreated(savedInstanceState)
     }
 
     //네이버 쇼핑 정보를 가져오기 위해 코루틴을 실행

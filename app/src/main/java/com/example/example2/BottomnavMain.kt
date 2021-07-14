@@ -88,7 +88,7 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
                 var now_weather_Array = weatherParse.current!!.weather//current 파라미터에서 리스트로 선언
                 now_imageCode = now_weather_Array[0].icon//그 리스트를 가져오면 weatherList를 받아와 이미지 코드를 얻게 된다
                 println("이미지 코드 : ${now_imageCode}")
-                progressbar.visibility = View.INVISIBLE//데이터를 다 받아왔으면 프로그레스바를 숨긴다
+                //progressbar.visibility = View.INVISIBLE//데이터를 다 받아왔으면 프로그레스바를 숨긴다
 
                 hourly_array = weatherParse.hourly
                 println("0번 인덱스 시간 : ${hourly_array[0].dt}")
