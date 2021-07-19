@@ -5,7 +5,15 @@ import android.os.Bundle
 import android.text.Html
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TableLayout
+import android.widget.TableRow
+import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
+import com.example.example2.databinding.ActivityInviewholderBinding
 import com.example.example2.databinding.ActivityMoresearchBinding
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_moresearch.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,14 +28,17 @@ import java.util.HashMap
 class MoresearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMoresearchBinding
+    private lateinit var naverbinding : ActivityInviewholderBinding
+    private var moresearchList : ArrayList<NaverApiData> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_moresearch)
 
         CoroutineScope(Dispatchers.Main).launch {
-            //뷰 바인딩 작업을 하기 위해 Root View를 참조하는 과정정
+            //뷰 바인딩 작업을 하기 위해 Root View를 참조하는 과정
             binding = ActivityMoresearchBinding.inflate(layoutInflater)
+            naverbinding = ActivityInviewholderBinding.inflate(layoutInflater)
             val view = binding.root
             setContentView(view)
             binding.moresearchProgressbar.visibility = View.VISIBLE
@@ -40,9 +51,41 @@ class MoresearchActivity : AppCompatActivity() {
             }.join()
 
             binding.moresearchProgressbar.visibility = View.INVISIBLE
-            println(json_result)
-        }
+            binding.moresearchTextview.text = "${closet} 확인 결과"
 
+            var shoppingParse = Gson().fromJson(json_result, ShoppingParse::class.java)
+            var item_Array = shoppingParse.items
+
+
+            for(i in item_Array.indices){
+                var naverimgurl = item_Array[i].image
+                var naverproductname = item_Array[i].title
+                var naverprice = item_Array[i].lprice
+                var naverbrand = item_Array[i].brand
+
+                moresearchList.add(NaverApiData(naverproductname,naverprice,naverbrand,naverimgurl))
+            }
+
+            //이전에는 리니어 레이아웃을 이용했지만 이번에는 그리드 레이아웃을 사용
+            //context와 레이아웃의 열 개수를 인자로 보내 화면에 나타나게 한다
+            val gridLayoutManager = GridLayoutManager(applicationContext, 2)
+            val adapter = MoresearchAdapter(moresearchList)
+            binding.moresearchRecyclerview.adapter = adapter
+            binding.moresearchRecyclerview.layoutManager = gridLayoutManager
+        }//UI작업 코루틴
+
+    }
+
+    private fun set_Linearlayout(naverimgurl : String, naverproductname : String, naverprice : Int, naverbrand : String) : View{
+        Glide.with(naverbinding.root.context)
+            .load(naverimgurl)
+            .into(naverbinding.naverImg)
+
+        naverbinding.naverTitle.text = naverproductname
+        naverbinding.naverPrice.text = naverprice.toString()
+        naverbinding.naverBrand.text = naverbrand
+
+        return naverbinding.naverLayout
     }
     
     private fun get_json(closet : String?) : String{
@@ -62,10 +105,6 @@ class MoresearchActivity : AppCompatActivity() {
         val apiURL =
             "https://openapi.naver.com/v1/search/shop?query=${text}&display=30" // json 결과
 
-        //String apiURL = "https://openapi.naver.com/v1/search/blog.xml?query="+ text; // xml 결과
-
-
-        //String apiURL = "https://openapi.naver.com/v1/search/blog.xml?query="+ text; // xml 결과
         val requestHeaders: MutableMap<String, String> = HashMap()
         requestHeaders["X-Naver-Client-Id"] = clientId
         requestHeaders["X-Naver-Client-Secret"] = clientSecret
@@ -90,7 +129,6 @@ class MoresearchActivity : AppCompatActivity() {
             if (responseCode == HttpURLConnection.HTTP_OK) { // 정상 호출
                 readBody(con.inputStream)
             } else { // 에러 발생
-                print("불러오는데서 에러 발생 ${responseCode}")
                 readBody(con.errorStream)
             }
         } catch (e: IOException) {
@@ -129,4 +167,5 @@ class MoresearchActivity : AppCompatActivity() {
             throw java.lang.RuntimeException("API 응답을 읽는데 실패했습니다.", e)
         }
     }
+
 }
