@@ -41,7 +41,6 @@ class MoresearchActivity : AppCompatActivity() {
             val view = binding.root
             setContentView(view)
 
-            //뷰 바인딩의
             binding.moresearchProgressbar.visibility = View.VISIBLE
 
             var closet = intent.getStringExtra("closet")
@@ -64,8 +63,9 @@ class MoresearchActivity : AppCompatActivity() {
                 var naverproductname = item_Array[i].title
                 var naverprice = item_Array[i].lprice
                 var naverbrand = item_Array[i].brand
+                var naverlink = item_Array[i].link
 
-                moresearchList.add(NaverApiData(naverproductname,naverprice,naverbrand,naverimgurl))
+                moresearchList.add(NaverApiData(naverproductname,naverprice,naverbrand,naverimgurl,naverlink))
             }
 
             //이전에는 리니어 레이아웃을 이용했지만 이번에는 그리드 레이아웃을 사용

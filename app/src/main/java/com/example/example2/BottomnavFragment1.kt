@@ -44,6 +44,7 @@ class BottomnavFragment1 : Fragment() {
     private lateinit var fragment1Activity: Activity
     private lateinit var closetList : List<String>
     private var setting_closetList : ArrayList<Fragment1OutData> = ArrayList()
+    private val TAG = "BottomnavFragment1"
 
     //프래그먼트를 안고있는 액티비티에 붙었을 때
     override fun onAttach(context: Context) {
@@ -93,6 +94,7 @@ class BottomnavFragment1 : Fragment() {
         fragment1_progressbar?.visibility = View.VISIBLE
         setClosetList()//해당 기온에 맞는 옷들을 담는 리스트를 구현하는 메서드 호출
         set_coroutine()//네이버 쇼핑 api를 파싱하는 메서드 호출
+
 
         // 이 프래그먼트가 액티비티에 떼어지면 기존에 가지고있던 옷 리스트의 데이터를 지운다
         // 더 보기 액티비티로 넘긴 후 다시 돌아오니 에러 발생 clear 하는 시점을 변경
@@ -192,8 +194,9 @@ class BottomnavFragment1 : Fragment() {
             var price = shopitemarray[i].lprice
             var brand = shopitemarray[i].brand
             var image_url = shopitemarray[i].image
+            var link = shopitemarray[i].link
 
-            naverdatalist.add(NaverApiData(title, price, brand, image_url))
+            naverdatalist.add(NaverApiData(title, price, brand, image_url, link))
         }
 
         return naverdatalist

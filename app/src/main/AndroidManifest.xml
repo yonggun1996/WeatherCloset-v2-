@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.example2">
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -24,7 +25,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MoresearchActivity"></activity>
+        <activity android:name=".WebViewActivity"></activity>
+        <activity android:name=".WeatherActivity" />
+        <activity android:name=".MoresearchActivity" />
         <activity
             android:name=".BottomnavMain"
             android:screenOrientation="portrait" />
@@ -40,7 +43,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".WeatherActivity" />
+        <activity
+            android:name=".WeatherActivity"
+            tools:ignore="DuplicateActivity" />
         <activity
             android:name=".SplashActivity"
             android:screenOrientation="portrait">
