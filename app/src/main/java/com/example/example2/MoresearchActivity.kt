@@ -27,8 +27,8 @@ import java.util.HashMap
 
 class MoresearchActivity : AppCompatActivity() {
 
+    //뷰 바인딩을 이용해 xml 코드 내의 레이아웃을 설정
     private lateinit var binding: ActivityMoresearchBinding
-    private lateinit var naverbinding : ActivityInviewholderBinding
     private var moresearchList : ArrayList<NaverApiData> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,9 +38,10 @@ class MoresearchActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.Main).launch {
             //뷰 바인딩 작업을 하기 위해 Root View를 참조하는 과정
             binding = ActivityMoresearchBinding.inflate(layoutInflater)
-            naverbinding = ActivityInviewholderBinding.inflate(layoutInflater)
             val view = binding.root
             setContentView(view)
+
+            //뷰 바인딩의
             binding.moresearchProgressbar.visibility = View.VISIBLE
 
             var closet = intent.getStringExtra("closet")
@@ -56,7 +57,8 @@ class MoresearchActivity : AppCompatActivity() {
             var shoppingParse = Gson().fromJson(json_result, ShoppingParse::class.java)
             var item_Array = shoppingParse.items
 
-
+            //Gson으로 네이버 쇼핑 API에서 얻어온 데이터를 각 변수에 담고 그리드 레이아웃의 어댑터에 전달할
+            //NaverAPIData 클래스의 내용을 리스트에 넣는 과정
             for(i in item_Array.indices){
                 var naverimgurl = item_Array[i].image
                 var naverproductname = item_Array[i].title
@@ -76,18 +78,7 @@ class MoresearchActivity : AppCompatActivity() {
 
     }
 
-    private fun set_Linearlayout(naverimgurl : String, naverproductname : String, naverprice : Int, naverbrand : String) : View{
-        Glide.with(naverbinding.root.context)
-            .load(naverimgurl)
-            .into(naverbinding.naverImg)
-
-        naverbinding.naverTitle.text = naverproductname
-        naverbinding.naverPrice.text = naverprice.toString()
-        naverbinding.naverBrand.text = naverbrand
-
-        return naverbinding.naverLayout
-    }
-    
+    //네이버 API 얻어오는 함수
     private fun get_json(closet : String?) : String{
         val clientId = "" //애플리케이션 클라이언트 아이디값"
 

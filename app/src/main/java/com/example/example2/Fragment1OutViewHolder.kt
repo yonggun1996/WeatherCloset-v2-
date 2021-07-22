@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_inviewholder.view.*
 import kotlinx.android.synthetic.main.activity_out1viewholder.*
 import kotlinx.android.synthetic.main.activity_out1viewholder.view.*
 
@@ -21,7 +22,6 @@ class Fragment1OutViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         }
 
         view.more_searchBtn.setOnClickListener {
-            println("${item.closet} 더보기로 넘어갑니다.")
             var intent = Intent(view.context, MoresearchActivity::class.java)
             intent.putExtra("closet",item.closet)
             view.context.startActivity(intent)

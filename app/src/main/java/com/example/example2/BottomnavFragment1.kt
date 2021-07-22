@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_bottomnavigation.*
+import kotlinx.android.synthetic.main.activity_inviewholder.*
 import kotlinx.android.synthetic.main.activity_out1viewholder.*
 import kotlinx.android.synthetic.main.fragment_bottomnav1.*
 import kotlinx.coroutines.CoroutineScope

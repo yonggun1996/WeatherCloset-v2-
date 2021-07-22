@@ -5,12 +5,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <ImageView
+    <ImageButton
         android:id="@+id/naver_img"
+        android:background="#FFF"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_gravity="center"
-        android:paddingBottom="10dp"></ImageView>
+        android:paddingBottom="10dp"></ImageButton>
 
     <TextView
         android:id="@+id/naver_title"
