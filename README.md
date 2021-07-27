@@ -8,11 +8,28 @@
 
 ### 방금 네이버 쇼핑 API를 끌어온다고 하는데...
 
-- 맞습니다. 뭔가 더 추가할 수 있는 기능이 있지 않을까 고민을 했습니다. 이 API로 현재 날씨에 맞는 옷들이 무엇이 있는지 보여줄 예정입니다.
+- 맞습니다. 뭔가 더 추가할 수 있는 기능이 있지 않을까 고민을 했습니다. 이 API로 현재 날씨에 맞는 옷들이 무엇이 있는지 화면에 적용 시킵니다.
 - 옷들을 보여주는 목록을 클릭하면 네이버 페이지로 이동하게 할 예정입니다.
 - 대략적인 이미지
 
 ![20210407_234220](https://user-images.githubusercontent.com/68115246/117122084-70ab2800-add0-11eb-8983-b29a20657a06.jpg)
+
+### 위에 그림대로 구현을 어떻게 했나요?
+1. 중첩 리싸이클러 뷰 : 위의 이미지 대로 현재 기온에 대한 옷 종류와 그에 따른 리싸이클러 뷰를 보여줘야 합니다. 바깥쪽에는 수직으로 스크롤이 가능한 리싸이클러 뷰를 안에는 수평으로 해당 옷에대한 정보 10개를 보여주는 리사이클러 뷰를 만들었습니다. 
+
+살짝 자세히 설명하자면 바깥쪽 RecyclerView에 적용시킨 Fragment1OutViewHolder 클래스에서 작은 RecyclerView 어댑터를 적용 시키고, 레이아웃을 설정했습니다.
+
+- 중첩된 리사이클러 뷰를 만드는데 도움이 된 블로그 : https://lktprogrammer.tistory.com/176
+
+- 자세한 설명과 결과 : https://www.notion.so/79ee2c52f3a14152886b04055fec9472
+
+2. GridLayout을 기반으로 한 RecyclerView : 스토어 프래그먼트에서 더보기 버튼을 클릭하면 해당 옷에대한 정보를 30개 보여주는 액티비티로 이동합니다.
+
+기존에 RecyclerView를 만드는데 마지막 코드를 GridLayout으로 변경합니다.
+
+- 자세한 설명 : https://github.com/yonggun1996/WeatherCloset-v2-/wiki/GridLayout-X-RecyclerView
+
+3. 웹 뷰 이동 : 프래그먼트에서 이미지를 클릭하거나 더 보기 버튼을 클릭한 후 이미지를 클릭을 하면 JSON으로 얻어온 링크로 이동하는 소스코드를 작성했습니다.
 
 ### 이번엔 어떻게 끌어올건가요?
 
@@ -60,10 +77,18 @@
 
 - 코루틴과 관련된 정리 : https://www.notion.so/Kotlin-Coroutine-131681c56f334feca01c0535064e42ae
 
-### 중첩 리싸이클러 뷰
+### 뷰 바인딩 사용기
 
-위의 이미지 대로면 현재 기온에 대한 옷 종류와 그에 따른 리싸이클러 뷰를 보여줘야 합니다. 바깥쪽에는 수직으로 스크롤이 가능한 리싸이클러 뷰를 안에는 수평으로 해당 옷에대한 정보 10개를 보여주는 리사이클러 뷰를 만들어야 했습니다.
+- 안드로이드 공식 문서를 살펴보던 중 ViewBinding 기능이 있다는 것을 알게 되었습니다. 평소에 코틀린에선 xml 레이아웃의 아이디를 바로 입력하면 됐지만 파일이 많아질수록 새로운 변수명을
+  지어야 한다는 부담감이 있었습니다.
+  
+- 뷰 바인딩은 레이아웃 id명이 겹쳐도 kotlin 코드에서 해당 뷰에대한 변수를 선언한 후 해당 레이아웃의 아이디에 접근하기 때문에 레이아웃을 선택하는데 모호성이 사라지게 됩니다.
 
-- 중첩된 리사이클러 뷰를 만드는데 도움이 된 블로그 : https://lktprogrammer.tistory.com/176
+- findviewbyID는 잘못된 타입으로 캐스팅을 할 경우 Class case Exception을 발생시키는 단점과 코드가 길어질 가능성, 레이아웃 태그를 순회해 일치하는 뷰를 찾아가는 방법으로
+  연산속도가 떨어지는 단점을 보완합니다.
+  
+- 알게된 출처 : https://roomedia.tistory.com/entry/View-Binding-findViewById-%EB%8C%80%EC%B2%B4%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95-View-Binding%EA%B3%BC-Data-Binding-%EC%B0%A8%EC%9D%B4
+- 정리한 노션 링크 : https://www.notion.so/ViewBinding-vs-findviewByID-9a8d54aaab754f3dbfa3816ffb5c0ecd
 
-- 자세한 설명과 결과 : https://www.notion.so/79ee2c52f3a14152886b04055fec9472
+### 포트폴리오 PDF 파일
+링크 : file:///C:/Users/NOTE%20BOOK/Desktop/%EA%B8%B0%EC%98%A8%EB%B3%84%20%EC%98%B7%EC%B0%A8%EB%A6%BC%20%EC%95%B1(version2).pdf
