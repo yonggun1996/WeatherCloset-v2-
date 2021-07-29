@@ -186,35 +186,26 @@ class BottomnavFragment3_1 : Fragment() {
     private fun set_getup_tv(temp_total: Int, list_size: Int) {
         temp_list.sort()
 
-        var cold = 0//추운 온도는 얼마나 있는가
-        var hot = 0//더운 온도는 얼마나 있는가
+        var cold = get_coldIndex()//9도 이하의 지점이 끝나는 시점은 언제인가
+        Log.d(TAG, "cold : ${cold}")
+        var hot = get_hotIndex()//26도 이상의 지점이 시작하는 시점은 언제인가
+        Log.d(TAG, "hot : ${hot}")
 
-        //추운온도, 더운온도가 얼마나 있는지 나타내는 코드
-        for (i in 0..list_size - 1) {
-            if (temp_list[i] <= 9) {
-                cold++
-            } else if (temp_list[i] >= 26) {
-                hot++
-            }
-        }//for
 
         Log.d(TAG, "총 온도 : ${temp_total} / 리스트 길이 : ${list_size} / 추운시간 : ${cold} / 더운시간 : ${hot}")
         //평균온도를 정하는 코드
         if (cold >= list_size / 2) {//추운날이 절반 이상이면 최저온도
-            flag_temp = temp_list.get(0)
+            flag_temp = temp_list[0]
             cold_day = true
-        } else if (hot >= list_size / 2) {//더운날이 절반 이상이면 최고온도
-            flag_temp = temp_list.get(list_size - 1)
+        } else if (hot <= list_size / 2) {//더운날이 절반 이상이면 최고온도
+            flag_temp = temp_list[list_size - 1]
             hot_day = true
         } else {//둘 다 해당되지 않으면 평균온도
             var temp_double = temp_total.toDouble() / list_size.toDouble()
             flag_temp = Math.round(temp_double).toInt()
         }
 
-        if ((temp_list.get(0) < 23 && temp_list.get(list_size - 1) > 4) && temp_list.get(list_size - 1) - temp_list.get(
-                0
-            ) >= 7
-        ) {
+        if ((temp_list[0] < 23 && temp_list[list_size - 1] > 4) && temp_list[list_size - 1] - temp_list[0] >= 7) {
             //일교차가 심하면 true
             daily_cross_flag = true
         }
@@ -457,10 +448,10 @@ class BottomnavFragment3_1 : Fragment() {
 
     private fun Outerwear_temperature(temp: Int): String {
         var outer = ""
-        var max_temp = temp_list.get(temp_list.size - 1)
-        var min_temp = temp_list.get(0)
+        var max_temp = temp_list[temp_list.size - 1]
+        var min_temp = temp_list[0]
         if (cold_day) {
-            if (max_temp >= 5 && max_temp <= 8) {
+            /*if (max_temp >= 5 && max_temp <= 8) {
                 outer = "코트를"
             } else if (max_temp >= 9 && max_temp <= 14) {
                 outer = "자켓을"
@@ -470,10 +461,18 @@ class BottomnavFragment3_1 : Fragment() {
                 outer = "얇은 가디건을"
             } else {
                 outer = "외투를 입지 않는것을"
+            }*/
+
+            outer = when(max_temp){
+                in 5..8 -> "코트를"
+                in 9..14 -> "자켓을"
+                in 15..19 -> "가디건을"
+                in 20..22 -> "얇은 가디건을"
+                else -> "외투를 입지 않는것을"
             }
         } else if (hot_day) {
 
-            if (min_temp >= 5 && min_temp <= 8) {
+            /*if (min_temp >= 5 && min_temp <= 8) {
                 outer = "코트를"
             } else if (min_temp >= 9 && min_temp <= 14) {
                 outer = "자켓을"
@@ -483,9 +482,17 @@ class BottomnavFragment3_1 : Fragment() {
                 outer = "얇은 가디건을"
             } else {
                 outer = "패딩을"
+            }*/
+
+            outer = when (min_temp) {
+                in 5..8 -> "코트를"
+                in 9..14 -> "자켓을"
+                in 15..19 -> "가디건을"
+                in 20..22 -> "얇은 가디건을"
+                else -> "패딩을"
             }
         } else {
-            if (temp <= 4) {
+            /*if (temp <= 4) {
                 outer = "패딩을"
             } else if (temp >= 5 && temp <= 8) {
                 outer = "코트를"
@@ -497,11 +504,53 @@ class BottomnavFragment3_1 : Fragment() {
                 outer = "얇은 가디건을"
             } else {
                 outer = "외투를 입지 않는것을"
+            }*/
+
+            when{
+                temp <= 4 -> outer = "패딩을"
+                temp in 5..8 -> outer = "코트를"
+                temp in 9..14 -> outer = "자켓을"
+                temp in 15..19 -> outer = "가디건을"
+                temp in 20..22 -> outer = "얇은 가디건을"
+                else -> outer = "외투를 입지 않는것을"
             }
         }
 
         return outer
     }
 
+    //어디까지가 9도 이하인지 확인하는 이진탐색 메서드
+    private fun get_coldIndex() : Int{
+        var start = 0
+        var end = temp_list.size - 1
+
+        while(start <= end){
+            var mid = (start + end) / 2
+            if(temp_list.get(mid) <= 9){
+                start = mid + 1
+            }else{
+                end = mid - 1
+            }
+        }
+
+        return end + 1
+    }
+
+    //어디서부터 26도 이상인지 확인하는 이진탐색 메서드
+    private fun get_hotIndex() : Int{
+        var start = 0
+        var end = temp_list.size - 1
+
+        while(start <= end){
+            var mid = (start + end) / 2
+            if(temp_list[mid] >= 26){
+                end = mid - 1
+            }else{
+                start = mid + 1
+            }
+        }
+
+        return start + 1
+    }
 
 }

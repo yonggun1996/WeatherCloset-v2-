@@ -48,6 +48,7 @@ class BottomnavFragment1 : Fragment() {
 
     //프래그먼트를 안고있는 액티비티에 붙었을 때
     override fun onAttach(context: Context) {
+        Log.d(TAG, "onAttach 메서드 호출")
         fragment1Context = context
 
         if(context is Activity){
@@ -60,7 +61,7 @@ class BottomnavFragment1 : Fragment() {
     //OnCreate() : 프래그먼트가 액티비티에 호출을 받아 생성되는 시점에 호출되는 메서드
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("Bottomnav1", "스토어의 onCreate()")
+        Log.d("Bottomnav1", "onCreate() 호출")
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -80,7 +81,7 @@ class BottomnavFragment1 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
+        Log.d(TAG, "onCreateView 호출 ")
         return inflater.inflate(R.layout.fragment_bottomnav1, container, false)
     }
 
@@ -91,6 +92,7 @@ class BottomnavFragment1 : Fragment() {
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
+        Log.d(TAG, "onActivityCreated 호출")
         fragment1_progressbar?.visibility = View.VISIBLE
         setClosetList()//해당 기온에 맞는 옷들을 담는 리스트를 구현하는 메서드 호출
         set_coroutine()//네이버 쇼핑 api를 파싱하는 메서드 호출
@@ -254,5 +256,4 @@ class BottomnavFragment1 : Fragment() {
             throw java.lang.RuntimeException("API 응답을 읽는데 실패했습니다.", e)
         }
     }
-
 }
