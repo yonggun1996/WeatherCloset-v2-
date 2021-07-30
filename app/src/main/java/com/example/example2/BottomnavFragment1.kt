@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.example2.databinding.ActivityBottomnavigationBinding
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_bottomnavigation.*
 import kotlinx.android.synthetic.main.activity_inviewholder.*
@@ -61,14 +62,14 @@ class BottomnavFragment1 : Fragment() {
     //OnCreate() : 프래그먼트가 액티비티에 호출을 받아 생성되는 시점에 호출되는 메서드
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("Bottomnav1", "onCreate() 호출")
+        Log.d(TAG, "onCreate() 호출")
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
 
             this.get_now_temp = it.getDouble("now_Temp")
             int_now_temp = Math.round(get_now_temp).toInt()
-            println("프래그먼트 1 현재온도 :  ${int_now_temp}")
+            Log.d(TAG, "프래그먼트 1 현재온도 :  ${int_now_temp}")
         }
 
 
@@ -93,10 +94,9 @@ class BottomnavFragment1 : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         Log.d(TAG, "onActivityCreated 호출")
-        fragment1_progressbar?.visibility = View.VISIBLE
+        //fragment1_progressbar?.visibility = View.VISIBLE
         setClosetList()//해당 기온에 맞는 옷들을 담는 리스트를 구현하는 메서드 호출
         set_coroutine()//네이버 쇼핑 api를 파싱하는 메서드 호출
-
 
         // 이 프래그먼트가 액티비티에 떼어지면 기존에 가지고있던 옷 리스트의 데이터를 지운다
         // 더 보기 액티비티로 넘긴 후 다시 돌아오니 에러 발생 clear 하는 시점을 변경
@@ -124,7 +124,7 @@ class BottomnavFragment1 : Fragment() {
 
             }
 
-            fragment1_progressbar?.visibility = View.INVISIBLE
+            //fragment1_progressbar?.visibility = View.INVISIBLE
             val adapter = Fragment1OutAdapter(setting_closetList)
             now_temp_rv?.adapter = adapter
             //버튼을 누르면 여기서 화면이 전환되게끔

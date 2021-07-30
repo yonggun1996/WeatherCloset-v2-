@@ -67,4 +67,10 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     //코루틴 사용을 위해 선언
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3'
+
+    //레트로핏 사용을 위해 선언
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.1"
+
 }
