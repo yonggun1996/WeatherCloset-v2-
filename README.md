@@ -10,6 +10,7 @@
 
 - 맞습니다. 뭔가 더 추가할 수 있는 기능이 있지 않을까 고민을 했습니다. 이 API로 현재 날씨에 맞는 옷들이 무엇이 있는지 화면에 적용 시킵니다.
 - 옷들을 보여주는 목록을 클릭하면 네이버 페이지로 이동하게 할 예정입니다.
+- 첫 화면은 네이버에서 호출 방법을 명시한 방법대로 하고 더 보기 버튼을 누르고 보여주는 정보는 Retrofit을 이용해 호출했습니다.
 - 대략적인 이미지
 
 ![20210407_234220](https://user-images.githubusercontent.com/68115246/117122084-70ab2800-add0-11eb-8983-b29a20657a06.jpg)
@@ -33,9 +34,10 @@
 
 ### 이번엔 어떻게 끌어올건가요?
 
-- OKHTTP로 끌어올 예정입니다.
+- 날씨 API는 OKHTTP로 끌어올 예정입니다.
 - 또한 네이버 에서는 라이브러리를 사용해도 되지만 데이터를 파싱하는 코드를 게시해놨습니다.
 - 출처 : https://developers.naver.com/docs/serviceapi/search/blog/blog.md#%EB%B8%94%EB%A1%9C%EA%B7%B8
+- 데이터를 더 확인했을 땐 Retorfit을 이용해서 데이터를 파싱했습니다.
 - 또한 GSON 라이브러리를 사용해 JSON 파일을 더 쉽게 코드로 옮길 수 있었습니다.
 - 출처 : https://www.youtube.com/watch?v=VjB9zjcWXFs&t=181s
 - 네이버 API를 끌어오는데 도움이 된 영상 : https://www.youtube.com/watch?v=C8-SII6S4Bc&t=2663s
