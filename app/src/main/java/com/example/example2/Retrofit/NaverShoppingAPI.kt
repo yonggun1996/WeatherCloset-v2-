@@ -19,7 +19,7 @@ interface NaverShoppingAPI {
         @Query("display") display : Int? = null//호출한 액티비티에서 입력받은 결과 수를 받아온다
     ): Call<ShoppingParse>
 
-    companion object{
+    companion object{//싱글톤 패턴으로 다른 액티비티에서 호출해도 동일한 인스턴스를 가질 수 있게 한다
         private const val BASEURL = "https://openapi.naver.com/v1/"//기본이 될 URL
 
         //네이버 api를 파싱하기 위해선 id와 비밀 키가 있어야 한다
@@ -27,6 +27,7 @@ interface NaverShoppingAPI {
         private const val CLIENT_SERECT = ""
 
         fun create(): NaverShoppingAPI{
+            //로깅 인터셉터 추가
             val httpLoggingInterceptor = HttpLoggingInterceptor()
             httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
@@ -39,15 +40,17 @@ interface NaverShoppingAPI {
                 return@Interceptor  it.proceed(request)
             }
 
+            //레트로핏 클라이언트 선언
             val client = OkHttpClient.Builder()
                 .addInterceptor(headerInterceptor)
                 .addInterceptor(httpLoggingInterceptor)
                 .build()
 
+            //레트로핏을 이용해 URL에 접속해 데이터를 얻어온다
             return Retrofit.Builder()
                 .baseUrl(BASEURL)
                 .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())//JSON 데이터를 직렬화 하기 위해 GsonConverterFactory선언
                 .build()
                 .create(NaverShoppingAPI::class.java)
         }

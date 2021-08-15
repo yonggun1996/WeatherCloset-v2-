@@ -20,7 +20,6 @@
     </androidx.recyclerview.widget.RecyclerView>
 
 
-    <!--
     <ProgressBar
         android:id="@+id/fragment1_progressbar"
         style="?android:attr/progressBarStyle"
@@ -30,7 +29,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/now_temp_rv" />
-    -->
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

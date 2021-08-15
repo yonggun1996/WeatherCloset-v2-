@@ -21,11 +21,11 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
     private lateinit var now_searchFragment : BottomnavFragment2
     private lateinit var setting_searchFragment : BottomnavFragment3
     private lateinit var confilm_weatherFragment : BottomnavFragment3_1
-    private var latitude = 0.0
-    private var longitude = 0.0
+    private var latitude = 0.0//위도
+    private var longitude = 0.0//경도
     private var now_item = 0
-    var getjson = false
-    private var parseData_String = ""
+    var getjson = false//json 데이터를 얻어 왔는가
+    private var parseData_String = ""//날씨 데이터를 얻어온 결과
     var fragment3_date_time_List : ArrayList<Long> = ArrayList<Long>()
     var now_temp = 0.0//현재 기온
     var now_feellike = 0.0//현재 체감기온
@@ -75,14 +75,13 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
                 Log.d(TAG, "데이터 얻어온 결과 : ${parseData_String}")
                 getjson = true
 
-                var weatherParse = Gson().fromJson(parseData_String, WeatherParse::class.java)
-                now_temp = weatherParse.current!!.temp
-                now_feellike = weatherParse.current!!.feels_like
+                var weatherParse = Gson().fromJson(parseData_String, WeatherParse::class.java)//날씨데이터를 받아와 GSON라이브러리를 이용해 JSON 데이터의 변수를 가져온다
+                now_temp = weatherParse.current!!.temp//현재 온도
+                now_feellike = weatherParse.current!!.feels_like//현재 체감온도
                 //now_imageCode = weatherParse.current!!.weather[3].toString() -> 잘못된 방식
 
                 var now_weather_Array = weatherParse.current!!.weather//current 파라미터에서 리스트로 선언
-                now_imageCode =
-                    now_weather_Array[0].icon//그 리스트를 가져오면 weatherList를 받아와 이미지 코드를 얻게 된다
+                now_imageCode = now_weather_Array[0].icon//그 리스트를 가져오면 weatherList를 받아와 이미지 코드를 얻게 된다
                 Log.d(TAG, "이미지 코드 : ${now_imageCode}")
                 //progressbar.visibility = View.INVISIBLE//데이터를 다 받아왔으면 프로그레스바를 숨긴다
 
@@ -118,7 +117,7 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
         bundle.putSerializable("hourlyList", hourly_array)//시간별 온도의 데이터를 넘겨준다
 
         bnf3_1.arguments = bundle
-        confilm_weatherFragment = BottomnavFragment3_1.newInstance()
+        confilm_weatherFragment = BottomnavFragment3_1.newInstance()//BottomnavFragment3_1 프래그먼트의 객체를 가져온다
         supportFragmentManager.beginTransaction().replace(R.id.bottomnav_framelayout, bnf3_1).commit()//fragment3_1으로 교체
         now_item = 4
     }
