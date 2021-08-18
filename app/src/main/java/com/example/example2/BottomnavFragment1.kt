@@ -2,7 +2,6 @@ package com.example.example2
 
 import android.app.Activity
 import android.content.Context
-import android.opengl.Visibility
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
@@ -11,16 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.example2.databinding.ActivityBottomnavigationBinding
 import com.google.gson.Gson
-import kotlinx.android.synthetic.main.activity_bottomnavigation.*
-import kotlinx.android.synthetic.main.activity_inviewholder.*
-import kotlinx.android.synthetic.main.activity_out1viewholder.*
 import kotlinx.android.synthetic.main.fragment_bottomnav1.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.io.*
 import java.net.HttpURLConnection
@@ -43,7 +36,6 @@ class BottomnavFragment1 : Fragment() {
     private var int_now_temp = 0
     private lateinit var fragment1Context: Context
     private lateinit var fragment1Activity: Activity
-    private lateinit var closetList : List<String>
     private var setting_closetList : ArrayList<Fragment1OutData> = ArrayList()
     private val TAG = "BottomnavFragment1"
 
@@ -95,8 +87,8 @@ class BottomnavFragment1 : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         Log.d(TAG, "onActivityCreated 호출")
         fragment1_progressbar?.visibility = View.VISIBLE
-        setClosetList()//해당 기온에 맞는 옷들을 담는 리스트를 구현하는 메서드 호출
-        set_coroutine()//네이버 쇼핑 api를 파싱하는 메서드 호출
+        var closet_list = setClosetList()//해당 기온에 맞는 옷들을 담는 리스트를 구현하는 메서드 호출
+        set_coroutine(closet_list)//네이버 쇼핑 api를 파싱하는 메서드 호출
 
         // 이 프래그먼트가 액티비티에 떼어지면 기존에 가지고있던 옷 리스트의 데이터를 지운다
         // 더 보기 액티비티로 넘긴 후 다시 돌아오니 에러 발생 clear 하는 시점을 변경
@@ -106,11 +98,10 @@ class BottomnavFragment1 : Fragment() {
     }
 
     //네이버 쇼핑 정보를 가져오기 위해 코루틴을 실행
-    private fun set_coroutine(){
+    private fun set_coroutine(closet_list : List<String>){
         CoroutineScope(Dispatchers.Main).launch {//UI 작업을 하는 Main Dispatchers
-            for(str in closetList) {
+            for(str in closet_list) {
                 lateinit var naverapi_list : ArrayList<NaverApiData>//json 데이터를 파싱한 결과
-
                 var closetJSON = CoroutineScope(Dispatchers.Default).launch {//네이버 쇼핑 API를 Parsing하는 Default Dispatchers
                     //서버단의 작업
                     naverapi_list = ArrayList<NaverApiData>(naverjsonparse(str))
@@ -136,7 +127,8 @@ class BottomnavFragment1 : Fragment() {
 
     }
 
-    private fun setClosetList(){
+    private fun setClosetList() : List<String>{
+        lateinit var closetList : List<String>
         when{
             int_now_temp <= 4 -> closetList = listOf("패딩","두꺼운 코트","기모티셔츠","두꺼운니트","니트","맨투맨","기모바지")
             int_now_temp in 5 .. 8 -> closetList = listOf("코트","가죽자켓","니트","맨투맨","청바지","기모바지")
@@ -149,7 +141,7 @@ class BottomnavFragment1 : Fragment() {
             int_now_temp in 23 .. 27 -> closetList = listOf("반팔","반 셔츠","린넨셔츠","면바지")
             int_now_temp >= 28 -> closetList = listOf("민소매","반팔","반 셔츠","린넨셔츠","반바지")
         }
-
+        return closetList
     }
 
     //네이버 쇼핑 api의 json 데이터를 파싱하는 메서드

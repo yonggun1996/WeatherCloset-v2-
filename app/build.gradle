@@ -76,4 +76,6 @@ dependencies {
     //오픈소스 UI를 가져오기 위해 선언
     implementation 'com.ldoublem.loadingview:loadingviewlib:1.0'
 
+    //메모리 릭을 확인하기 위한 라이브러리
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 }

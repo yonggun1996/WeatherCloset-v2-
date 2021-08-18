@@ -33,9 +33,6 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
     lateinit var hourly_array : Array<WeatherParse.Hourly>
     lateinit var hourly_weather_array : Array<WeatherParse.Hourly.Weather>
     val TAG = "BottomnavMain"
-    var bnf1 = BottomnavFragment1()
-    var bnf2 = BottomnavFragment2()//BottomnavFragment2 프래그먼트로 넘기기 위해 변수 선언
-    //var progress : ProgressBar = findViewById(R.id.progressbar)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         /*main에서 날씨에 대한 정보를 받아온 후 네비게이션 바를 누르면 그에 따른 화면을 보여주도록 수정 예정*/
@@ -97,6 +94,7 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
 
                 //데이터를 얻어오면 프래그먼트1에 데이터를 전달해 프래그먼트1 화면을 띄운다
 
+                var bnf1 = BottomnavFragment1()
                 bnf1.arguments = bundle
                 val transaction = supportFragmentManager.beginTransaction()
                 transaction.replace(R.id.bottomnav_framelayout, bnf1)
@@ -131,6 +129,7 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
                     var bundle = Bundle()//프래그먼트는 Bundle로 데이터를 주고 받아야 해서 Bundle 객체 선언
                     bundle.putDouble("now_Temp",now_temp)//bundle로 데이터를 저장하는 방법, "latitude"는 키가 되고 기존에 구했던 위도를 저장한다 마찬가질 아래는 경도를 저정한다
 
+                    var bnf1 = BottomnavFragment1()
                     bnf1.arguments = bundle
                     val transaction = supportFragmentManager.beginTransaction()
                     transaction.replace(R.id.bottomnav_framelayout, bnf1)
@@ -144,6 +143,7 @@ class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItem
                     bundle.putDouble("now_feellike",now_feellike)
                     bundle.putString("now_imageCode", now_imageCode)
 
+                    var bnf2 = BottomnavFragment2()
                     bnf2.arguments = bundle
 
                     val transaction = supportFragmentManager.beginTransaction()
