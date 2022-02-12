@@ -93,4 +93,4 @@
 - 정리한 노션 링크 : https://www.notion.so/ViewBinding-vs-findviewByID-9a8d54aaab754f3dbfa3816ffb5c0ecd
 
 ### 포트폴리오 PDF 파일
-링크 : file:///C:/Users/NOTE%20BOOK/Desktop/%EA%B8%B0%EC%98%A8%EB%B3%84%20%EC%98%B7%EC%B0%A8%EB%A6%BC%20%EC%95%B1(version2).pdf
+링크 : https://drive.google.com/file/d/17BQqgTlw66YM4jrTGx1tCwpw6g9bfg0z/view
