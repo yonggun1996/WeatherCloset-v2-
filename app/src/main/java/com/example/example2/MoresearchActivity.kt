@@ -38,17 +38,28 @@ class MoresearchActivity : AppCompatActivity() {
         //어노테이션으로 선언한 query에는 옷 종류가 display(검색 결과 수)는 30으로 전달
         api.get_ShoppingData(closet, 30).enqueue(object : retrofit2.Callback<ShoppingParse> {
             override fun onResponse(call: Call<ShoppingParse>, response: Response<ShoppingParse>) {
-                var result = response.body()//레트로핏으로 받아온 결과
-                var naverAPIArray = result!!.items
+                val result = response.body()//레트로핏으로 받아온 결과
+                Log.d(TAG, "Retrofit 호출한 결과 : ${result}")
+                val naverAPIArray = result!!.items
 
-                for(i in naverAPIArray.indices){
-                    var naverimgurl = naverAPIArray[i].image//이미지 url
-                    var naverproductname = Html.fromHtml(naverAPIArray[i].title, Html.FROM_HTML_MODE_LEGACY).toString() //html 태그를 없애는 코드
-                    var naverprice = naverAPIArray[i].lprice//가격
-                    var naverbrand = naverAPIArray[i].brand//브랜드명
-                    var naverlink = naverAPIArray[i].link//해당 상품을 판매하는 링크
+                for (i in naverAPIArray.indices) {
+                    val naverimgurl = naverAPIArray[i].image//이미지 url
+                    val naverproductname =
+                        Html.fromHtml(naverAPIArray[i].title, Html.FROM_HTML_MODE_LEGACY)
+                            .toString() //html 태그를 없애는 코드
+                    val naverprice = naverAPIArray[i].lprice//가격
+                    val naverbrand = naverAPIArray[i].brand//브랜드명
+                    val naverlink = naverAPIArray[i].link//해당 상품을 판매하는 링크
 
-                    moresearchList.add(NaverApiData(naverproductname, naverprice, naverbrand, naverimgurl, naverlink))
+                    moresearchList.add(
+                        NaverApiData(
+                            naverproductname,
+                            naverprice,
+                            naverbrand,
+                            naverimgurl,
+                            naverlink
+                        )
+                    )
                 }
 
                 //리사이클러 뷰를 그리드 레이아웃으로 표현하는 코드

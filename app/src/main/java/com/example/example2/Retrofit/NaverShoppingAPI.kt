@@ -1,5 +1,6 @@
 package com.example.example2.Retrofit
 
+import android.util.Log
 import com.example.example2.NaverApiData
 import com.example.example2.ShoppingParse
 import okhttp3.Interceptor
@@ -12,7 +13,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface NaverShoppingAPI {
-
     @GET("search/shop.json")//기본 URL에 어떠한 정보를 얻어올 것인지와 HTTP 메소드를 설정
     fun get_ShoppingData(
         @Query("query") query : String?,//호출한 액티비티에서 입력받은 쿼리를 받아온다
@@ -25,6 +25,7 @@ interface NaverShoppingAPI {
         //네이버 api를 파싱하기 위해선 id와 비밀 키가 있어야 한다
         private const val CLIENT_ID = ""
         private const val CLIENT_SERECT = ""
+        private const val TAG = "NaverShoppingAPI"
 
         fun create(): NaverShoppingAPI{
             //로깅 인터셉터 추가
@@ -32,6 +33,7 @@ interface NaverShoppingAPI {
             httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
             val headerInterceptor = Interceptor{
+                Log.d(TAG, "Interceptor Chain : ${it}")
                 val request = it.request()
                     .newBuilder()
                     .addHeader("X-Naver-Client-Id", CLIENT_ID)
