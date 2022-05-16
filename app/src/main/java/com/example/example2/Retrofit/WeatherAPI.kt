@@ -1,6 +1,6 @@
 package com.example.example2.Retrofit
 
-import com.example.example2.WeatherParse
+import com.example.example2.BottomNavigationFragment3.WeatherParse
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

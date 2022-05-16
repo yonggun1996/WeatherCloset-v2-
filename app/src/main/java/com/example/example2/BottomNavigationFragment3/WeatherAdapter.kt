@@ -1,8 +1,10 @@
-package com.example.example2
+package com.example.example2.BottomNavigationFragment3
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.example2.R
+import com.example.example2.WeatherDataViewHolder
 
 class WeatherAdapter(val itemList : ArrayList<WeatherData>) : RecyclerView.Adapter<WeatherDataViewHolder>() {
 

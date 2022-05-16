@@ -1,8 +1,7 @@
 package com.example.example2.Retrofit
 
 import android.util.Log
-import com.example.example2.NaverApiData
-import com.example.example2.ShoppingParse
+import com.example.example2.BottomNavigationFragment1.ShoppingParse
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -16,7 +15,7 @@ interface NaverShoppingAPI {
     @GET("search/shop.json")//기본 URL에 어떠한 정보를 얻어올 것인지와 HTTP 메소드를 설정
     fun get_ShoppingData(
         @Query("query") query : String?,//호출한 액티비티에서 입력받은 쿼리를 받아온다
-        @Query("display") display : Int? = null//호출한 액티비티에서 입력받은 결과 수를 받아온다
+        @Query("display") display : Int? = 10//호출한 액티비티에서 입력받은 결과 수를 받아온다
     ): Call<ShoppingParse>
 
     companion object{//싱글톤 패턴으로 다른 액티비티에서 호출해도 동일한 인스턴스를 가질 수 있게 한다

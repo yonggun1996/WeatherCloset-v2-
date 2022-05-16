@@ -1,4 +1,4 @@
-package com.example.example2
+package com.example.example2.BottomNavigationFragment3
 
 import android.content.Context
 import android.content.DialogInterface
@@ -14,6 +14,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.add
 import androidx.fragment.app.replace
+import com.example.example2.BottomnavMain
+import com.example.example2.R
 import kotlinx.android.synthetic.main.fragment_bottomnav3.*
 import kotlinx.android.synthetic.main.fragment_bottomnav3.out1_date1_spinner
 import kotlinx.android.synthetic.main.fragment_bottomnav3.out1_time1_spinner

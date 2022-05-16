@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.example2.BottomNavigationFragment1.NaverApiData
 import kotlinx.android.synthetic.main.activity_inviewholder.view.*
 
 class NaverApiViewHolder(v : View) : RecyclerView.ViewHolder(v) {

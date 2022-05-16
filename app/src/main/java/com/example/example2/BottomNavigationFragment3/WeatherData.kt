@@ -1,4 +1,4 @@
-package com.example.example2
+package com.example.example2.BottomNavigationFragment3
 
 import android.app.Activity
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.example.example2
+package com.example.example2.BottomNavigationFragment2
 
 import android.app.Activity
 import android.content.Context
@@ -15,6 +15,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.bumptech.glide.Glide
+import com.example.example2.R
 import kotlinx.android.synthetic.main.fragment_bottomnav2.*
 import kotlinx.android.synthetic.main.fragment_bottomnav2.text_coat
 import kotlinx.android.synthetic.main.fragment_bottomnav2.text_other

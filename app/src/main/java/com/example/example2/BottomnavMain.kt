@@ -5,17 +5,18 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.ProgressBar
 import android.widget.Toast
+import com.example.example2.BottomNavigationFragment1.BottomnavFragment1
+import com.example.example2.BottomNavigationFragment2.BottomnavFragment2
+import com.example.example2.BottomNavigationFragment3.BottomnavFragment3
+import com.example.example2.BottomNavigationFragment3.BottomnavFragment3_1
+import com.example.example2.BottomNavigationFragment3.WeatherParse
 import com.example.example2.Retrofit.WeatherAPI
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_bottomnavigation.*
 import okhttp3.*
 import retrofit2.Call
 import retrofit2.Response
-import java.io.IOException
-import java.sql.DriverManager.println
 import java.util.*
 
 class BottomnavMain : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener{

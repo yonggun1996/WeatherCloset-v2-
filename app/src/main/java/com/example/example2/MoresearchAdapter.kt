@@ -3,6 +3,7 @@ package com.example.example2
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.example2.BottomNavigationFragment1.NaverApiData
 
 class MoresearchAdapter(val itemList : ArrayList<NaverApiData>) :
     RecyclerView.Adapter<NaverApiViewHolder>() {

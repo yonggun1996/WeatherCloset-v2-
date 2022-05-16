@@ -3,8 +3,8 @@ package com.example.example2
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.example2.BottomNavigationFragment3.WeatherData
 import kotlinx.android.synthetic.main.activity_set_weathers.view.*
-import kotlinx.android.synthetic.main.activity_weather.*
 
 //RecyclerView 어댑터에 사용할 뷰홀더
 class WeatherDataViewHolder(v : View) : RecyclerView.ViewHolder(v) {

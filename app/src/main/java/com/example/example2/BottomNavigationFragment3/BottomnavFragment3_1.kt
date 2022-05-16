@@ -1,4 +1,4 @@
-package com.example.example2
+package com.example.example2.BottomNavigationFragment3
 
 import android.content.Context
 import android.os.Bundle
@@ -14,6 +14,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.example.example2.R
 import kotlinx.android.synthetic.main.activity_weather.*
 import java.lang.StringBuilder
 import java.text.SimpleDateFormat
@@ -448,71 +449,36 @@ class BottomnavFragment3_1 : Fragment() {
 
     private fun Outerwear_temperature(temp: Int): String {
         var outer = ""
-        var max_temp = temp_list[temp_list.size - 1]
-        var min_temp = temp_list[0]
-        if (cold_day) {
-            /*if (max_temp >= 5 && max_temp <= 8) {
-                outer = "코트를"
-            } else if (max_temp >= 9 && max_temp <= 14) {
-                outer = "자켓을"
-            } else if (max_temp >= 15 && max_temp <= 19) {
-                outer = "가디건을"
-            } else if (max_temp >= 20 && max_temp <= 22) {
-                outer = "얇은 가디건을"
-            } else {
-                outer = "외투를 입지 않는것을"
-            }*/
-
-            outer = when(max_temp){
-                in 5..8 -> "코트를"
-                in 9..14 -> "자켓을"
-                in 15..19 -> "가디건을"
-                in 20..22 -> "얇은 가디건을"
-                else -> "외투를 입지 않는것을"
+        val max_temp = temp_list[temp_list.size - 1]
+        val min_temp = temp_list[0]
+        when {
+            cold_day -> {
+                outer = when(max_temp){
+                    in 5..8 -> "코트를"
+                    in 9..14 -> "자켓을"
+                    in 15..19 -> "가디건을"
+                    in 20..22 -> "얇은 가디건을"
+                    else -> "외투를 입지 않는것을"
+                }
             }
-        } else if (hot_day) {
-
-            /*if (min_temp >= 5 && min_temp <= 8) {
-                outer = "코트를"
-            } else if (min_temp >= 9 && min_temp <= 14) {
-                outer = "자켓을"
-            } else if (min_temp >= 15 && min_temp <= 19) {
-                outer = "가디건을"
-            } else if (min_temp >= 20 && min_temp <= 22) {
-                outer = "얇은 가디건을"
-            } else {
-                outer = "패딩을"
-            }*/
-
-            outer = when (min_temp) {
-                in 5..8 -> "코트를"
-                in 9..14 -> "자켓을"
-                in 15..19 -> "가디건을"
-                in 20..22 -> "얇은 가디건을"
-                else -> "패딩을"
+            hot_day -> {
+                outer = when (min_temp) {
+                    in 5..8 -> "코트를"
+                    in 9..14 -> "자켓을"
+                    in 15..19 -> "가디건을"
+                    in 20..22 -> "얇은 가디건을"
+                    else -> "패딩을"
+                }
             }
-        } else {
-            /*if (temp <= 4) {
-                outer = "패딩을"
-            } else if (temp >= 5 && temp <= 8) {
-                outer = "코트를"
-            } else if (temp >= 9 && temp <= 14) {
-                outer = "자켓을"
-            } else if (temp >= 15 && temp <= 19) {
-                outer = "가디건을"
-            } else if (temp >= 20 && temp <= 22) {
-                outer = "얇은 가디건을"
-            } else {
-                outer = "외투를 입지 않는것을"
-            }*/
-
-            when{
-                temp <= 4 -> outer = "패딩을"
-                temp in 5..8 -> outer = "코트를"
-                temp in 9..14 -> outer = "자켓을"
-                temp in 15..19 -> outer = "가디건을"
-                temp in 20..22 -> outer = "얇은 가디건을"
-                else -> outer = "외투를 입지 않는것을"
+            else -> {
+                outer = when{
+                    temp <= 4 -> "패딩을"
+                    temp in 5..8 -> "코트를"
+                    temp in 9..14 -> "자켓을"
+                    temp in 15..19 -> "가디건을"
+                    temp in 20..22 -> "얇은 가디건을"
+                    else -> "외투를 입지 않는것을"
+                }
             }
         }
 

@@ -6,6 +6,8 @@ import android.text.Html
 import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.example2.BottomNavigationFragment1.NaverApiData
+import com.example.example2.BottomNavigationFragment1.ShoppingParse
 import com.example.example2.Retrofit.NaverShoppingAPI
 import com.example.example2.databinding.ActivityMoresearchBinding
 import kotlinx.android.synthetic.main.activity_moresearch.view.*
